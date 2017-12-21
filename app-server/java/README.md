@@ -3,7 +3,7 @@
 >## Introduction
 
 > 앱서버는 앱서버 라이브러리가 제공하는 API를 통해 단말 앱들과 실시간 데이터 통신을 할 수 있다. 
-자세한 API는 [JAVA 앱서버 API 레퍼런스](http://guide.rationalowl.com/api-reference/app-server/java)를 참조한다.
+
 
 앱서버 라이브러가 앱서버에 제공하는 주요 기능은 다음과 같다.
 
