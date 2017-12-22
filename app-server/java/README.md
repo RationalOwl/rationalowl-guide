@@ -91,17 +91,16 @@ serverMgr.registerAppServer("myServiceId", "app server1", "gate.rationalowl.com"
     - 앱 서버를 구분하는 구분자
     - 앱 서버 API호출시 인자로 이용
     - 단말앱에서 업스트림 메시지 발신시 대상 앱서버 지정하는데 이용
-        - 단말앱 개발자는 콘솔의 앱서버 현황 화면에서 앱서버 등록 아이디를 확인할 수 있다.
+        - 단말앱 개발자는 관리자 콘솔의 앱서버 현황 화면에서 앱서버 등록 아이디를 확인할 수 있다.
     - 
  2. 앱서버 등록 요청시 입력한 앱 서버 등록 이름
 
 ```java
-public void onRegisterResult(int resultCode, String resultMsg, String appServerRegId) {
-    output("RegisterResult:" + resultMsg + "  reg server id = " + appServerRegId);
+public void onRegisterResult(int resultCode, String resultMsg, String appServerRegId, String appServerRegName) {
+    output("RegisterResult:" + resultMsg + "  reg server id = " + appServerRegId + " reg server name = " + appServerRegName);
 
-    // should save appServerRegId
     if (resultCode == Result.RESULT_OK || resultCode == Result.RESULT_SERVER_REGNAME_ALREADY_REGISTERED) {
-        mServerRegId = appServerRegId;
+        // should save and manage mServerRegName and mServerRegId to the file or db.
     }
 }
 ```
