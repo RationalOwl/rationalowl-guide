@@ -51,7 +51,7 @@ APNS를 이용하기 위해서는 모든 앱은 고유한App ID를 생성해야 
 ![이미지 이름](./img/app-id2.png)
 
 4. AppID Description에 앱 이름을 입력한다. Ex: RationalOwlSample
-5. Explicit App ID에Bundle ID를 입력한다. Ex:com.sample.ROSample
+5. Explicit App ID에Bundle ID를 입력한다. Ex:com.rationalowl.sample
  - xcode에서 앱 작성시 입력하는  **Bundle Identifier와 동일**한 값
 
 ![이미지 이름](./img/app-id3.png)
@@ -172,8 +172,39 @@ APNS를 이용하기 위해서는 모든 앱은 고유한App ID를 생성해야 
 
 이로서 래셔널아울 서비스를 통해 IOS 단말앱이 백그라운드일 경우 APNS 알림을 발신 할 준비가 끝났다.
 
-## 프로비저닝 프로필 생성
+## 프로비저닝 프로파일 생성
 
-앞서 APNS 알림을 발신을 위한 절차가 끝났다. 그러나 IOS 단말앱이 APNS 알림을 수신하기 위한 절차가 남아 있다. 즉, IOS 단말앱에 프로비저닝 프로필을 정상적으로 생성해야 한다.
+앞서 APNS 알림을 발신을 위한 절차가 끝났다. 그러나 IOS 단말앱이 APNS 알림을 수신하기 위한 절차가 남아 있다. 즉, IOS 단말앱에 프로비저닝 프로파일을 생성해야 합니다. 앞서 개발용 APNS인증서를 이용하기 위한 개발용 프로비저닝 프로파일 기준으로 설명한다.
 
-1. ㅇㅇㅇ
+1. 웹브라우저로 Apple Developers Center에 로그인 후 'Certificates, Identifiers & Profiles'섹션의 'Provisioning Profiles' 를 클릭한다.
+2. 새 프로파일을 만들려면 오른쪽 상단의 + 버튼을 클릭한다.
+3. 'Development' 섹션에서 iOS App Development를 선택하고 'Continue'를 클릭한다.
+
+![이미지 이름](./img/profile1.png)
+
+4. 드랍다운 메뉴에서 사용할 APP ID를 선택한다.
+ - APNS 개발용 인증서 생성시 입력한 Explicit App ID와 동일한 ID를 선택한다. Ex:com.rationalowl.sample
+ - xcode에서 앱 작성시 **Bundle Identifier** 에도 동일한 값을 입력해야 한다.
+
+![이미지 이름](./img/profile3.png)
+
+5. 프로비저닝 프로파일에 포함할 인증서를 선택하고 'Continue'버튼을 누른다.
+
+![이미지 이름](./img/profile4.png)
+
+6. 개발용 프로파일을 적용한 단말앱을 설치할 개발용 단말을 선택한다.
+
+![이미지 이름](./img/profile5.png)
+
+7. 프로비저닝 프로파일 이름을 입력한다.
+
+![이미지 이름](./img/profile6.png)
+
+8. Download를 눌러 프로비저닝 프로파일을 Mac으로 다운로드한다.
+
+![이미지 이름](./img/profile7.png)
+
+
+9. 다운로드한 프로비저닝 프로파일을 두번 클릭하면 Xcode에 프로비저닝 프로파일이 적용된다.
+
+이제 Xcode로 단말앱 개발시 Bundle ID를 p12 인증서 생성시 입력한 Explicit App ID ( Ex: com.rationalowl.com)와 동일하게 입력하면 해당 단말앱에서 APNS 알림을 수신할 수 있다.
