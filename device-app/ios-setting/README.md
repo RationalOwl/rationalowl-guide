@@ -1,10 +1,9 @@
-# 래셔널아울 APNS 인증서 설정 가이드
+# 래셔널아울 IOS 설정 가이드
 
 >## Introduction
 
 > **래셔널아울 서비스를 이용하는 안드로이드 단말앱**의 경우 단말앱이 포그라운드에서 실행되지 않더라도 **다운스트림/P2P 메시지 수신이 가능**하다. 
-그에 반해, IOS단말앱일 경우 OS제약 때문에 앱이 포그라운드에서 실행되고 있지 않을 경우 다운스트림/P2P 메시지를 수신할 유일한 방법이 APNS(Apple Push Notification Service)를 통한 푸시 알림이다. 본 문서에서는 래셔널아울 서비스에서 APNS 푸심알림 설정을 하기 위한 1. APNS 서버용 인증서 생성방법과 2. 생성한 인증서를 래셔널아울 관리자 콘솔을 통한 업로드하는 방법에 대해 설명한다.         
-따라서 IOS단말앱이 포그라운드에서 실시간 데이터 전달만 하는 모바일 서비스일 경우 본 과정을 거칠 필요가 없다. 
+그에 반해, IOS단말앱일 경우 OS제약 때문에 앱이 포그라운드에서 실행되고 있지 않을 경우 다운스트림/P2P 메시지를 수신할 유일한 방법이 APNS(Apple Push Notification Service)를 통한 푸시 알림이다. 본 문서에서는 래셔널아울 서비스에서 APNS 푸심알림 설정을 하기 위한 1. APNS 서버용 인증서 생성방법과 2. 생성한 인증서를 래셔널아울 관리자 콘솔을 통한 업로드하는 방법 3. 프로비저닝 프로파일 설정에 대해 설명한다.         
 
 아래는 래셔널아울 서비스를 통해 IOS단말앱이 실행되지 않을 때, 단말앱이 P2P 메시지와 다운스트림(푸시) 메시지를 수신하는 과정이다.
 
@@ -51,7 +50,7 @@ APNS를 이용하기 위해서는 모든 앱은 고유한App ID를 생성해야 
 ![이미지 이름](./img/app-id2.png)
 
 4. AppID Description에 앱 이름을 입력한다. Ex: RationalOwlSample
-5. Explicit App ID에Bundle ID를 입력한다. Ex:com.rationalowl.sample
+5. Explicit App ID에Bundle ID를 입력한다. Ex: com.rationalowl.sample
  - xcode에서 앱 작성시 입력하는  **Bundle Identifier와 동일**한 값
 
 ![이미지 이름](./img/app-id3.png)
