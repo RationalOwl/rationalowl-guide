@@ -188,20 +188,8 @@ API인자는 다음과 같다.
 }
 ```
 ### 단말앱 등록 결과
-단말앱 등록이 성공되면 발급받은 단말 등록 아이디를 단말앱은 저장 및 관리해야 하고 해당 단말 등록 아이디를 단말앱을 관리 및 통신할 대상 앱서버에게 업스트림 API를 통해 전달해야 한다.
-마찬가지로 앱서버는 전달받은 단말 등록 아이디를 저장 및 관리해야 한다.
 
-단말앱 등록 결과 반환받는 값들은 다음과 같다.
-
- 1. 단말 등록 아이디
-    - 단말 앱을 구분하는 구분자
-    - 단말앱 등록 성공이거나 기등록된 경우 전달받는다.
-    - 단말앱 등록 성공일 경우 이를 앱 서버에게 upstream API를 통해 전달해야 한다.
- 2. 결과 코드
- 3. 결과 메시지
-
-
-Objective-C 의 경우 MinervaDelegate.h에 정의된 onRegisterResult 콜백이 호출된다.
+registerDevice API 호출 결과 onRegisterResult 콜백이 호출된다.
 
 ```swift
 -(void) onRegisterResult: (int) resultCode resultMsg : (NSString*) resultMsg deviceRegId : (NSString*) deviceRegId {
@@ -215,6 +203,21 @@ Objective-C 의 경우 MinervaDelegate.h에 정의된 onRegisterResult 콜백이
     }
 } 
 ```
+콜백 파라미터의 의미는 다음과 같다.
+
+ 1. resultCode 
+    - 결과 코드
+    - 등록 성공시 Result.RESULT_OK
+    - 기등록된 경우 Result.RESULT_DEVICE_ALREADY_REGISTERED
+    - 그외 비정상 에러값
+ 2. resultMsg
+    - 결과 코드의 의미
+ 3. 단말 등록 아이디
+    - 단말앱을 구분하는 구분자로 단말앱이 등록 성공시 새로 발급받는다.
+    - 최초 단말앱 등록 성공시나 기등록된 경우에도 전달받는다.
+    - 단말앱 등록 성공일 경우 이를 앱 서버에게 upstream API를 통해 전달해야 한다.
+    - 앱서버가 단말 등록 아이디를 수신시 이를 저장 및 관리해야 한다.
+
 
 ## 단말앱 등록해제
 고객 서비스 내에서 사용하지 않는 단말앱을 등록 해제한다. 
@@ -233,21 +236,21 @@ unregisterDevice() API를 통해 단말앱 등록해제 요청한다.
 
 ### 단말앱 등록해제 결과
 
-단말앱 등록해제 결과 단말앱 라이브러리는 단말앱에 다음의 값들을 알려준다.
-
- 1. 단말 등록 아이디
-    - 단말 앱을 구분하는 구분자    
- 2. 결과 코드
- 3. 결과 메시지
-
-Objective-C 의 경우 MinervaDelegate.h에 정의된 onUnregisterResult 콜백이 호출된다.
+unregisterDevice API 호출 결과 onUnregisterResult 콜백이 호출된다.
 
 ```swift
 -(void) onUnregisterResult: (int) resultCode resultMsg : (NSString*) resultMsg {
     NSLog(@"onUnregisterResult ");
 }
 ```
+콜백 파라미터의 의미는 다음과 같다.
 
+ 1. resultCode 
+    - 결과 코드
+    - 성공시 Result.RESULT_OK
+    - 그외 비정상 에러값
+ 2. resultMsg
+    - 결과 코드의 의미
 
 ## 업스트림 메시지 발신
 래셔널아울 서비스는 다수의 앱서버를 지원하고 단말앱은 특정 앱서버에게 업스트림 메시지를 발신한다. 
@@ -278,20 +281,24 @@ sendUpstreamMsg() API를 통해 업스트림 메시지를 발신한다.
 ### 업스트림 메시지 발신 결과
 ![이미지 이름](./img/upstream_callback.png)
 
-업스트림 메시지 발신 결과는 발신이 성공했는지 확인하는 용도로 제공되고 아래의 값들을 포함하고 있다.
-
- 1. umi(Upstream Message Id)
-    - 어느 API 호출에 대한 결과인지 확인하는 용도
- 2. 결과 코드
- 3. 결과 메시지
-
-Objective-C 의 경우 MinervaDelegate.h에 정의된 onUpstreamMsgResult 콜백이 호출된다.
+sendUpstreamMsg API 호출 결과 onUpstreamMsgResult 콜백이 호출된다.
 
 ```swift
 -(void) onUpstreamMsgResult: (int) resultCode resultMsg : (NSString*) resultMsg umi : (NSString*) umi {
     NSLog(@"onUpstreamMsgResult umi = %@", umi);
 }
 ```
+
+콜백 파라미터의 의미는 다음과 같다.
+
+ 1. resultCode 
+    - 결과 코드
+    - 성공시 Result.RESULT_OK
+    - 그외 비정상 에러값
+ 2. resultMsg
+    - 결과 코드의 의미
+ 3. umi(Upstream Message Id)
+    - 어느 API 호출에 대한 결과인지 확인하는 용도
 
 
 ## P2P 메시지 발신
@@ -329,14 +336,7 @@ sendP2PMsg() API를 통해 P2P 메시지를 발신한다.
 ### P2P 메시지 발신 결과
 ![이미지 이름](./img/p2p_callback.png)
 
-P2P 메시지 발신 결과는 발신이 성공했는지 확인하는 용도로 제공되고 아래의 값들을 포함하고 있다.
-
- 1. pmi(P2P Message Id)
- - 어느 API 호출에 대한 결과인지 확인하는 용도
- 2. 결과 코드
- 3. 결과 메시지
-
-Objective-C 의 경우 MinervaDelegate.h에 정의된 onP2PMsgResult 콜백이 호출된다.
+sendP2PMsg API 호출 결과 onP2PMsgResult 콜백이 호출된다.
 
 ```swift
 -(void) onP2PMsgResult: (int) resultCode resultMsg : (NSString*) resultMsg pmi : (NSString*) pmi {
@@ -344,25 +344,24 @@ Objective-C 의 경우 MinervaDelegate.h에 정의된 onP2PMsgResult 콜백이 �
 }
 ```
 
+콜백 파라미터의 의미는 다음과 같다.
+
+ 1. resultCode 
+    - 결과 코드
+    - 성공시 Result.RESULT_OK
+    - 그외 비정상 에러값
+ 2. resultMsg
+    - 결과 코드의 의미
+ 3. pmi(P2P Message Id)
+    - 어느 API 호출에 대한 결과인지 확인하는 용도
 
 ## 메시지 수신
-단말앱은 앱서버로부터의 다운스트림 메시지와 다른 단말앱으로부터의 P2P 메시지를 수신한다. 
+단말앱은 앱서버로부터 다운스트림 메시지 수신 시 또는 다른 단말앱으로부터 P2P 메시지 수신 시 콜백이 호출되어 단말앱이 이를 처리할 수 있게 한다.
 
 ### 다운스트림 메시지 수신
-앱서버에서 발신하는 멀티캐스트, 브로드캐스트, 그룹 메시지를 단말앱이 수신시 단말앱 라이브러리는 단말앱에게 다음의 값들을 알려준다.
-
-1. 다운스트림 메시지 갯수    
-2. 다운스트림 메시지 목록  
-   메시지 목록의 각 메시지는 다음의 값들을 포함한다.
-  - 메시지 발신한 앱서버의 서버등록아이디
-  - 메시지 데이터
-  - 메시지 발신시간
-  - 단말앱이 백그라운드시 표시할 알림 타이틀
-  - 단말앱이 백그라운드시 표시할 알림 본문
+앱서버에서 발신하는 멀티캐스트, 브로드캐스트, 그룹 메시지를 단말앱이 수신시 onDownstreamMsgRecieved 콜백이 호출된다.
 
 ![이미지 이름](./img/down_rcv.png)
-
-Objective-C 의 경우 MinervaDelegate.h에 정의된 onDownstreamMsgRecieved 콜백이 호출된다.
 
 ```swift
 -(void) onDownstreamMsgRecieved: (int) msgSize msgList : (NSArray*) msgList alarmIdx : (int) alarmIdx {
@@ -392,22 +391,24 @@ Objective-C 의 경우 MinervaDelegate.h에 정의된 onDownstreamMsgRecieved �
     ...
 }
 ```
+콜백 파라미터의 의미는 다음과 같다.
+
+ 1. msgSize 
+    - 다운스트림 메시지 갯수
+ 2. msgList
+    - 다운스트림 메시지 목록
+    - 메시지 목록의 각 메시지는 다음의 값들을 포함한다.
+      - 메시지 발신한 앱서버의 서버등록아이디
+      - 메시지 데이터
+      - 메시지 발신시간
+      - 단말앱이 백그라운드시 표시할 알림 타이틀
+      - 단말앱이 백그라운드시 표시할 알림 본문
 
 ### P2P 메시지 수신
-모바일 서비스 내 다른 단말앱에서 발신한 P2P 메시지를 단말앱이 수신시 단말앱 라이브러리은 단말앱에게 다음의 값들을 알려준다.
 
-1. P2P 메시지 갯수    
-2. P2P 메시지 목록  
-   메시지 목록의 각 메시지는 다음의 값들을 포함한다.
-  - 메시지 발신한 단말앱의 단말등록아이디
-  - 메시지 데이터
-  - 메시지 발신시간
-  - 단말앱이 백그라운드시 표시할 알림 타이틀
-  - 단말앱이 백그라운드시 표시할 알림 본문
+다른 단말앱으로부터 P2P 메시지 수신시 onP2PMsgRecieved 콜백이 호출된다.
 
 ![이미지 이름](./img/p2p_rcv.png)
-
-Objective-C 의 경우 MinervaDelegate.h에 정의된 onP2PMsgRecieved 콜백이 호출된다.
 
 ```swift
 -(void) onP2PMsgRecieved: (int) msgSize msgList : (NSArray*) msgList alarmIdx : (int) alarmIdx {
@@ -435,8 +436,15 @@ Objective-C 의 경우 MinervaDelegate.h에 정의된 onP2PMsgRecieved 콜백이
     ...
 }
 ```
+콜백 파라미터의 의미는 다음과 같다.
 
-
-
-
-
+ 1. msgSize 
+    - 다운스트림 메시지 갯수
+ 2. msgList
+    - P2P 메시지 목록
+    - 메시지 목록의 각 메시지는 다음의 값들을 포함한다.
+      - 메시지 발신한 단말앱의 단말등록아이디
+      - 메시지 데이터
+      - 메시지 발신시간
+      - 단말앱이 백그라운드시 표시할 알림 타이틀
+      - 단말앱이 백그라운드시 표시할 알림 본문
