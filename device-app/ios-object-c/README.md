@@ -57,6 +57,7 @@ IOS의 특성때문에 IOS단말앱이 백그라운드 알림을 받기 위해�
 
 ![이미지 이름](./img/4-2.png)
 
+
 8. General > Embedded Binaries 항목에 RationaOwl.framework를 선택한다.
  - 이로서 프로젝트 내 샘플 코드에서 라이브러리를 import 해서 래셔널아울 API 호출이 가능하다.
 
