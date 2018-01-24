@@ -21,7 +21,10 @@
 >##  단말앱 개발환경 세팅
 
 ### 개발 전 IOS 설정
-IOS의 특성때문에 IOS단말앱이 백그라운드 알림을 받기 위해서는 APNS 인증서 설정이 필요하고 또한 프로비저닝 프로파일 설정도 필요하다. [IOS 설정 가이드](http://guide.rationalowl.com/guide/device-app/ios/setting)를 통해 개발 전 설정을 먼저 진행해야 한다.
+(https://github.com/RationalOwl/rationalowl-guide/tree/master/device-app/ios-setting)를 통해 개발 전 아래 설정을 먼저 진행해야 한다.
+
+- APNS 발신용 인증서 생성 및 래셔널아울 서비스에 등록
+- 프로비저닝 프로파일 설정
 
 ### 개발 단계 설정
 
