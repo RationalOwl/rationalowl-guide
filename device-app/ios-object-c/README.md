@@ -21,7 +21,7 @@
 >##  단말앱 개발환경 세팅
 
 ### 개발 전 IOS 설정
-(https://github.com/RationalOwl/rationalowl-guide/tree/master/device-app/ios-setting)를 통해 개발 전 아래 설정을 먼저 진행해야 한다.
+[IOS 설정 가이드](https://github.com/RationalOwl/rationalowl-guide/tree/master/device-app/ios-setting)를 통해 개발 전 아래 설정을 먼저 진행해야 한다.
 
 - APNS 발신용 인증서 생성 및 래셔널아울 서비스에 등록
 - 프로비저닝 프로파일 설정
