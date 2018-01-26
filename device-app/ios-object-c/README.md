@@ -31,6 +31,7 @@
 본 문서는 단말앱 라이브러리를 다운받아 단계별 개발하는 방법을 기준으로 설명한다. 본 문서에서는 기본 개발 개념을 이해하는데 집중하고 실제 개발 단계에서는 [래셔널아울 샘플앱](https://github.com/RationalOwl/rationalowl-sample)를 통해 개발 환경과 기본 소스가 세팅된 환경에서 개발을 시작하는 것이 효율적이다. 
 
 
+
 1. 먼저, 래셔널아울 Objective-C 단말앱 라이브러리 [RationalOwl.framework](http://guide.rationalowl.com/download/device-app/ios/objective-c/Rationalowl.framework)를 다운받는다.
 
 2. XCode를 런칭하고 File > New > Project를 클릭 후 간단한 'Single View App'을 선택한다.
@@ -45,15 +46,21 @@
 
 ![이미지 이름](./img/3.png)
 
-5. 다운받은 Rationalowl.framework 라이브러리를 마우스 드래그로 XCode프로젝트에 추가한다. 
+5. APNS 알림을 수신하기 위해 관련 라이브러리를 추가한다.   
+
+![이미지 이름](./img/apns_link.png)
+
+6. 다운받은 Rationalowl.framework 라이브러리를 마우스 드래그로 XCode프로젝트에 추가한다.    
+'Build Phases > Lin Bainary With Libraties' 에서 + 버튼을 눌러 UserNotifications.framework를 추가한다.
+
 
 ![이미지 이름](./img/4.png)
 
-6. Copy items if needed항목을 체크한다.
+7. Copy items if needed항목을 체크한다.
 
 ![이미지 이름](./img/4-1.png)
 
-7. Build Setting > Search Paths > Framework Search Paths 항목에 RationaOwl.framework를 카피한 폴더를 지정한다.
+8. Build Setting > Search Paths > Framework Search Paths 항목에 RationaOwl.framework를 카피한 폴더를 지정한다.
  - 가이드의 '5'과정에서 라이브러리를 프로젝트 루트에 드래그하여 프로젝트 루트에 카피하였다.
  - 프로젝트 루트에 라이브러리를 카피한 경우 $(PROJECT_DIR)을 입력하면 된다.
  - 이로서 프로젝트 내 샘플 코드에서 라이브러리를 import 해서 래셔널아울 API 호출이 가능하다.
@@ -61,12 +68,12 @@
 ![이미지 이름](./img/4-2.png)
 
 
-8. General > Embedded Binaries 항목에 RationaOwl.framework를 선택한다.
+9. General > Embedded Binaries 항목에 RationaOwl.framework를 선택한다.
  - 이로서 프로젝트 내 샘플 코드에서 라이브러리를 import 해서 래셔널아울 API 호출이 가능하다.
 
 ![이미지 이름](./img/4-3.png)
 
-9. XCode에 추가된 Rationalowl.framework 라이브러리에는 4개의 헤드 파일이 존재하는 것을 확인 할 수 있다. MinervaManager.h는 API 호출이 정의되어 있고, MinervaDelegate.h에는 단말앱 등록 결과 콜백, 메시지 발신 결과/수신 콜백이 정의되어 있고 Result.h에는 결과코드 및 결과 메시지 상수가 정의되어 있다. 그리고 RationalOwl.h는 이 세 개의 헤드파일을 임포트하고 있다.
+10. XCode에 추가된 Rationalowl.framework 라이브러리에는 4개의 헤드 파일이 존재하는 것을 확인 할 수 있다. MinervaManager.h는 API 호출이 정의되어 있고, MinervaDelegate.h에는 단말앱 등록 결과 콜백, 메시지 발신 결과/수신 콜백이 정의되어 있고 Result.h에는 결과코드 및 결과 메시지 상수가 정의되어 있다. 그리고 RationalOwl.h는 이 세 개의 헤드파일을 임포트하고 있다.
 
 ![이미지 이름](./img/5.png)
 
