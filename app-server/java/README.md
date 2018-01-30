@@ -10,10 +10,10 @@
 1. 실시간 다운스트림 데이터 발신
 현재 상용으로 서비스되는 푸시 메시지들은 다운스트림 데이터의 전송 속도, 전송률, 전송 순서 보장로 대표되는 데이터 품질의 보장이 어려워 알림용도로만 이용된다. 래셔널아울 서비스는 다운스트림 데이터의 품질을 보장함으로써 다운스트림 데이터를 단순히 알림용도뿐 아니라 서비스 내 실시간 데이터 전달의 용도로 활용이 가능하다.
 
-앱서버 라이브러리가 앱서버에 제공하는 다운스트림 API는 다음과 같다.
-- multicast
-- broadcast
-- group message  
+앱서버 라이브러리가 앱서버에 제공하는 다운스트림 발신 API는 다음과 같다.
+- 멀티캐스트
+- 브로드캐스트
+- 그룹메시지
 
 ![이미지 이름](./img/downstream.png)
 
@@ -112,14 +112,14 @@ public void onRegisterResult(int resultCode, String resultMsg, String appServerR
 
 ### 앱서버 등록 해제 요청
 
-unregisterAppServer() API를 통해 앱서버를 원하는 서비스의 서버로 등록 요청한다.
+unregisterAppServer() API를 등록해제 요청한다.
 
 ```java
 AppServerManager serverMgr = AppServerManager.getInstance();
 serverMgr.unregisterAppServer("myServiceId", "app server1", "gate.rationalowl.com", 9080);
 ```
 
-### 앱서버 등록 결과
+### 앱서버 등록 해제 결과
 앱서버 등록 결과는 AppServerRegisterResultListener 인터페이스의 onUnregisterResult()를 통해 알 수 있다. 
 
 ```java
