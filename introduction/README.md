@@ -560,7 +560,7 @@ String requestId = minMgr.sendUpstreamMsg(msg, serverId);
 
 ![이미지 이름](./img/p2p.png)
   
-단말앱은 sendUpstreamMsg() API를 통해 업스트림 메시지를 발신한다.
+단말앱은 sendP2PMsg() API를 통해 P2P 메시지를 발신한다.
 
 ```java
 MinervaManager minMgr = MinervaManager.getInstance();
