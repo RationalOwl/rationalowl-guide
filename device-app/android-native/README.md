@@ -112,7 +112,7 @@ public class Service1App extends Application {
 ![이미지 이름](./img/reg.png)
 
 
-### 앱서버 등록 요청
+### 단말앱 등록 요청
 
 registerDevice() API를 통해 단말앱을 원하는 서비스의 단말앱으로 등록 요청한다. 
 주의할 점은 API호출후 단말앱 등록결과 발급받은 단말등록아이디를 반드시 저장/관리해야 한다. 일단 단말등록아이디를 발급받으면 이 후 registerDevice() API를 호출할 필요는 없다. 즉, 단말앱 등록 API는 단말앱 설치 후 1회만 호출하면 된다.
@@ -127,7 +127,7 @@ API인자는 다음과 같다.
  - 관리자콘솔의 '서비스 > 서비스정보'에서 확인
 3. deviceRegName 
  - 관리자콘솔에서 단말을 구분하기 위한 용도
- - 사용하지 않을 경우 null로 입력****
+ - 사용하지 않을 경우 null로 입력
 
 ```java
 String gateHost = "gate.rationalowl.com";
