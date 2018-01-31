@@ -1,7 +1,6 @@
 # 래셔널아울 Android 단말 앱 개발 가이드
 
 >## Introduction
-
 > 단말앱은 단말앱 라이브러리가 제공하는 API를 통해 실시간 데이터 통신을 할 수 있다.
 
 단말앱 API는 다음과 같다.
@@ -34,7 +33,7 @@
 
 ![이미지 이름](./img/dependency.png)
 
-- manifest파일의 'android:name'필드에 단말 앱 이름을 명시한다. 
+- manifest파일의 'android:name'필드에 단말 앱 이름을 명시한다.
   - android:name 필드에 명시
   - 아래 샘플에서 "com.customer.test.Service1App"
 
