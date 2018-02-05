@@ -81,6 +81,7 @@
 
 ![이미지 이름](./img/4-1.png)
 
+
 - Build Setting > Search Paths > Framework Search Paths 항목에 RationaOwl.framework를 카피한 폴더를 지정한다.
   - 가이드의 '5'과정에서 라이브러리를 프로젝트 루트에 드래그하여 프로젝트 루트에 카피하였다.
   - 프로젝트 루트에 라이브러리를 카피한 경우 $(PROJECT_DIR)을 입력하면 된다.
@@ -267,6 +268,12 @@ registerDevice API 호출 결과 onRegisterResult 콜백이 호출된다.
 
 unregisterDevice() API를 통해 단말앱 등록해제 요청한다.
 
+API인자는 다음과 같다.
+
+- serviceId
+  - 단말앱이 등록해제 하고자하는 서비스의 아이디
+  - 관리자콘솔의 '서비스 > 서비스정보'에서 확인
+
 ```swift
 - (IBAction) unregDevice {
     MinervaManager* mgr = [MinervaManager getInstance];
@@ -310,6 +317,15 @@ unregisterDevice API 호출 결과 onUnregisterResult 콜백이 호출된다.
 ### 업스트림 메시지 발신 요청
 
 sendUpstreamMsg() API를 통해 업스트림 메시지를 발신한다.
+
+API인자는 다음과 같다.
+
+- msg
+  - 앱서버에게 전달하고자 하는 데이터
+  - 일반 스트링 혹은 json포맷의 스트링
+
+- serverRegId
+  - 데이터를 전달하고자 하는 대상 앱서버 등록 아이디
 
 ```swift
 - (IBAction)sendUpstreamMsg:(id)sender {
@@ -367,6 +383,16 @@ sendUpstreamMsg API 호출 결과 onUpstreamMsgResult 콜백이 호출된다.
 ### P2P 메시지 발신 요청
 
 sendP2PMsg() API를 통해 P2P 메시지를 발신한다.
+
+API인자는 다음과 같다.
+
+- msg
+  - 단말앱들에게 전달하고자 하는 데이터
+  - 일반 스트링 혹은 json포맷의 스트링
+
+- devices
+  - 데이터를 전달하고자 하는 대상 단말앱들의 등록 아이디 목록
+
 
 ```swift
 - (IBAction)sendP2PMsg:(id)sender {
