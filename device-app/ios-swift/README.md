@@ -3,8 +3,11 @@
 ## 목차
 
 - [Introduction](#introduction)
+- [단말앱 개발환경 세팅](#단말앱-개발환경-세팅)
     - [개발 전 IOS 설정](#개발-전-ios-설정)
     - [개발 단계 설정](#개발-단계-설정)
+        - [Bridging-Header 파일 적용](#bridging-header-파일-적용)
+    - [IOS API 레퍼런스 비고](#ios-api-레퍼런스-비고)
 - [플랫폼 특성 API](#플랫폼-특성-api)
     - [단말앱 라이프 사이클](#단말앱-라이프-사이클)
         - [(void) becomeActive](#void-becomeactive)
@@ -13,6 +16,7 @@
         - [단말앱 APNS 푸시 알림 활성화 설정](#단말앱-apns-푸시-알림-활성화-설정)
         - [(void) setDeviceToken: (NSString *)token](#void-setdevicetoken-nsstring-token)
         - [(void) receivedApns: (NSDictionary *)userInfo](#void-receivedapns-nsdictionary-userinfo)
+- [단말앱 등록](#단말앱-등록)
     - [단말앱 등록 요청](#단말앱-등록-요청)
     - [단말앱 등록 결과](#단말앱-등록-결과)
 - [단말앱 등록해제](#단말앱-등록해제)
@@ -46,7 +50,7 @@
   - 단말앱 등록 API
   - 단말앱 등록해제 API
 
->##  단말앱 개발환경 세팅
+## 단말앱 개발환경 세팅
 
 ### 개발 전 IOS 설정
 
@@ -108,10 +112,11 @@
 이로써 Swift에서 IOS 단말앱 라이브러리를 이용할 준비가 끝났다.
 
 ### IOS API 레퍼런스 비고
+
 IOS 단말앱 문서에서는 별도의 API 레퍼런스를 제공하지 않는다. IOS 단말앱 라이브러리인 'RationalOwl.framework'내의 3개의 헤더파일에 주석으로 명세한 API가 그것인데 해당 헤드 파일을 직접 참조하기 바란다.
 1. MinervaManager.h
  - 단말앱 등록/등록헤제 API
- - 업스트림 메시지 발신 API 
+ - 업스트림 메시지 발신 API
  - P2P 메시지 발신 API
  - 단말앱 라이프사이클 관련 API
  - 단말앱 등록/등록해제 결과 콜백 지정 API
@@ -144,7 +149,7 @@ IOS 단말앱 라이브러리에서는 다음의 API가 그것이다.
 ```swift
 func applicationDidBecomeActive(_ application: UIApplication) {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    
+
     let minMgr: MinervaManager = MinervaManager.getInstance();
     minMgr.becomeActive();
 }
@@ -159,7 +164,7 @@ func applicationDidBecomeActive(_ application: UIApplication) {
 func applicationWillResignActive(_ application: UIApplication) {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
-    
+
     let minMgr: MinervaManager = MinervaManager.getInstance();
     minMgr.enterBackground();
 }
@@ -199,7 +204,7 @@ func applicationWillResignActive(_ application: UIApplication) {
     let token = deviceToken.reduce("", {$0 + String(format: "%02X", $1)});
     let minMgr: MinervaManager = MinervaManager.getInstance();
     minMgr.setDeviceToken(token);
-    
+
     // Persist it in your backend in case it's new
 }
 ```
@@ -218,7 +223,7 @@ func applicationWillResignActive(_ application: UIApplication) {
     }
 ```
 
->## 단말앱 등록
+## 단말앱 등록
 
 단말앱이 래셔널아울 API를 통해 실시간 데이터 통신을 하기 위해서는먼저 단말앱을 원하는 고객 모바일 서비스에 등록한다. 등록된 단말앱들이 해당 모바일 서비스에 등록된 모든 단말과 실시간 메시지를 수/발신 할 수 있다.
 
@@ -262,13 +267,13 @@ registerDevice API 호출 결과 onRegisterResult 콜백이 호출된다.
 ```swift
 func onRegisterResult(_ resultCode: Int32, resultMsg: String!, deviceRegId: String!) {
     print("onRegisterResult resultCode = \(resultCode) resultMsg = \(resultMsg) deviceRegId = \(deviceRegId)")
-    
+
     // device app registration success!
     // send deviceRegId to the app server.
     if(resultCode == RESULT_OK) {
         //let mgr: MinervaManager = MinervaManager.getInstance();
         //mgr.sendUpstreamMsg("send deviceRegId to the app server", serverRegId: "app server reg id");
-        
+
     }
 }
 ```
@@ -357,7 +362,6 @@ API인자는 다음과 같다.
 - serverRegId
   - 데이터를 전달하고자 하는 대상 앱서버 등록 아이디
 
-
 ```swift
 @IBAction func sendUpstreamMsg() {
     let serverId: String = "fb8bf1de65e443e294588923e187a248";
@@ -423,7 +427,6 @@ API인자는 다음과 같다.
 - devices
   - 데이터를 전달하고자 하는 대상 단말앱들의 등록 아이디 목록
 
-
 ```swift
 @IBAction func sendP2PstreamMsg() {
     let msg: String = inputMessageField.text!;
@@ -477,7 +480,7 @@ func onDownstreamMsgRecieved(_ msgSize: Int32, msgList: [Any]!, alarmIdx: Int32)
     var msgData: String;
     let dateFormatter = DateFormatter();
     dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss";
-    
+
     for i in 0..<msgList.count {
         msg = msgList[i] as! Dictionary<String, Any>;
         // message sender(app server)'s app server registraion id
@@ -522,7 +525,7 @@ func onP2PMsgRecieved(_ msgSize: Int32, msgList: [Any]!, alarmIdx: Int32) {
     var msgData: String;
     let dateFormatter = DateFormatter();
     dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss";
-    
+
     for i in 0..<msgList.count {
         msg = msgList[i] as! Dictionary<String, Any>;
         // message sender(device app)'s device app registraion id
