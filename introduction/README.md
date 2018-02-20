@@ -1,4 +1,4 @@
-# 래셔널아울 Introduction
+# Introduction
 
 ## 목차
 
