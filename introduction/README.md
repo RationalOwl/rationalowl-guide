@@ -1,4 +1,4 @@
-# Introduction
+# 시작하기
 
 ## 목차
 
