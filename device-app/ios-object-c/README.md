@@ -1,4 +1,4 @@
-# 래셔널아울 IOS Objective-C 단말 앱 개발 가이드
+# IOS Objective-C 단말 앱 개발가이드
 
 ## 목차
 
