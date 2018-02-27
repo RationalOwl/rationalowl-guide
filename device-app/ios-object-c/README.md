@@ -61,7 +61,7 @@
 
 본 문서는 단말앱 라이브러리를 다운받아 단계별 개발하는 방법을 기준으로 설명한다. 본 문서에서는 기본 개발 개념을 이해하는데 집중하고 실제 개발 단계에서는 [래셔널아울 샘플앱](https://github.com/RationalOwl/rationalowl-sample)를 통해 개발 환경과 기본 소스가 세팅된 환경에서 개발을 시작하는 것이 효율적이다.
 
-- 먼저, 래셔널아울 Objective-C 단말앱 라이브러리 [RationalOwl.framework](http://guide.rationalowl.com/download/device-app/ios/objective-c/Rationalowl.framework)를 다운받는다.
+- 먼저, 래셔널아울 Objective-C 단말앱 라이브러리 [RationalOwl.framework](http://guide.rationalowl.com/download/device-app/ios/objective-c/Rationalowl.framework.zip)를 다운받는다.
 
 - XCode를 런칭하고 File > New > Project를 클릭 후 간단한 'Single View App'을 선택한다.
 
