@@ -103,14 +103,14 @@
 
 ### IOS API 레퍼런스 비고
 IOS 단말앱 문서에서는 별도의 API 레퍼런스를 제공하지 않는다. IOS 단말앱 라이브러리인 'RationalOwl.framework'내의 3개의 헤더파일에 주석으로 명세한 API가 그것인데 해당 헤드 파일을 직접 참조하기 바란다.
-1. MinervaManager.h
+1. [MinervaManager.h](https://github.com/RationalOwl/rationalowl-sample/blob/master/device-app/ios-object-c/RationalOwl.framework/Headers/MinervaManager.h)
  - 단말앱 등록/등록헤제 API
  - 업스트림 메시지 발신 API 
  - P2P 메시지 발신 API
  - 단말앱 라이프사이클 관련 API
  - 단말앱 등록/등록해제 결과 콜백 지정 API
  - 메시지 수/발신 결과 콜백 지정 API
-2. MinervaDelegate.h
+2. [MinervaDelegate.h](https://github.com/RationalOwl/rationalowl-sample/blob/master/device-app/ios-object-c/RationalOwl.framework/Headers/MinervaDelegate.h)
  - DeviceRegisterResultDelegate 정의 
    - 단말앱 등록/등록해제 결과 콜백 인터페이스
  - MessageDelegate 정의
@@ -118,7 +118,7 @@ IOS 단말앱 문서에서는 별도의 API 레퍼런스를 제공하지 않는�
    - P2P 메시지 수신시 콜백 인터페이스
    - 업스트림 메시지 발신 결과 콜백 인터페이스
    - P2P 메시지 발신 결과 콜백 인터페이스
-3. Result.h
+3. [Result.h](https://github.com/RationalOwl/rationalowl-sample/blob/master/device-app/ios-object-c/RationalOwl.framework/Headers/Result.h)
 - 래셔널아울 단말앱에서 발생하는 결과값 및 결과 메시지 상수 정의
 
 ## 플랫폼 특성 API
