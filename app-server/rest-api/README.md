@@ -40,7 +40,7 @@
 
 1. 실시간 다운스트림 데이터 발신
 
-현재 상용으로 서비스되는 푸시 메시지들은 다운스트림 데이터의 전송 속도, 전송률, 전송 순서 보장로 대표되는 데이터 품질의 보장이 어려워 알림용도로만 이용된다. 래셔널아울 서비스는 다운스트림 데이터의 품질을 보장함으로써 다운스트림 데이터를 단순히 알림용도뿐 아니라 서비스 내 실시간 데이터 전달의 용도로 활용이 가능하다.
+현재 상용으로 서비스되는 푸시 메시지들은 다운스트림 데이터의 전송 속도, 전송률, 전송 순서 등 데이터 품질의 보장이 어려워 알림용도로만 이용된다. 래셔널아울 서비스는 다운스트림 데이터의 품질을 보장함으로써 다운스트림 데이터를 단순히 알림용도뿐 아니라 서비스 내 실시간 데이터 전달의 용도로 활용이 가능하다.
 
 앱서버 라이브러리가 앱서버에 제공하는 다운스트림 발신 API는 다음과 같다.
 
@@ -50,7 +50,7 @@
 
 ![이미지 이름](./img/downstream.png)
 
-2. 업스트림 데이터 수신시 콜백
+2. 업스트림 데이터 수신
 
 단말앱으로부터 업스트림 데이터 수신시 콜백을 제공한다.
 
@@ -67,29 +67,29 @@
 - 단말 그룹에서 단말 삭제
 - 단말 그룹 삭제
 
-REST API를 이용한 앱서버도 앱서버가 제공하는 주요 기능을 대부분 이용할 수 있으나 몇 가지 제한점을 있다.
+REST API를 이용한 앱서버는 앱서버 라이브러리를 이용한 앱서버에 비해 아래와 같이 몇 가지 제한이 있다.
 
 -        | 앱서버 라이브러리 이용 | REST API 이용
 ------------- | ------------- | ------
 다운스트림 메시지 평균 전송 시간  | 0.5초  | 1초 내외
-업스트림 메시지 지원  | O  | X
+업스트림 메시지 수신  | O  | X
 콘솔에서 앱서버 상태 모니터링 지원 | O | X
 
 따라서 REST API는 앱 서버 라이브러리를 제공하지 않는 서버 개발 환경에 앱서버를 개발할 수 방안을 제공하는데 의의가 있다.
 
 ## 앱서버 등록
 
-REST API를 이용하기 위해서 먼저 앱 서버 등록한다. 하나의 모바일 서비스 내에서는 다수의 앱 서버 등록이 가능하다.
+REST API를 이용하기 위해서 먼저 앱 서버를 등록한다. 하나의 모바일 서비스 내에서는 다수의 앱 서버 등록이 가능하다.
 앱 서버가 등록되면 관리자 콘솔에 등록된 앱 서버가 나타난다. 다만 REST API로 등록된 앱 서버의 실시간 상태 모니터링은 지원되지 않는다.
 
 ![이미지 이름](./img/reg.png)
 
 ### 앱서버 등록 요청
 
-주의할 점은 API호출시 전달하는 앱서버 등록이름과 등록결과 발급받은 앱서버 등록 아이디와 채널서버 URL을 반드시 저장/관리해야 한다. REST API를 통해 앱서버 등록이 성공했으면 해당 앱서버는 다시 등록 요청할 필요가 없다. 기등록한 앱서버가 다시 등록 요청할 경우 앱서버 등록 이름이 바뀌면 래셔널아울 서비스에서는 다른 앱서버가 등록요청하는 것으로 인식하여 앱서버를 새로 등록하게 된다.
+주의할 점은 API호출시 전달하는 앱서버 등록이름과 등록결과 발급받은 앱서버 등록 아이디와 채널서버 URL을 반드시 저장/관리해야 한다. REST API를 통해 앱서버 등록이 성공했으면 해당 앱서버는 다시 등록 요청할 필요가 없다. 기등록한 앱서버가 다시 등록 요청할 경우 앱서버 등록 이름이 이전에 등록할 때와 다르면 래셔널아울 서비스에서는 다른 앱서버가 등록 요청하는 것으로 인식하여 앱서버를 새로 등록하게 된다.
 
 통신 방식 : HTTP POST
-url :   http://gate.rationalowl.com:8006/server/register/
+url :   http://gate.rationalowl.com:8006/server/register/   
 data format
 
 ```java
@@ -140,7 +140,7 @@ data format
 ### 앱서버 등록 해제 요청
 
 통신 방식 : HTTP POST
-url :   http://gate.rationalowl.com:8006/server/unregister/
+url :   http://gate.rationalowl.com:8006/server/unregister/   
 data format
 
 ```java
@@ -204,7 +204,7 @@ data format
 ### 멀티캐스트 메시지 발신
 
 통신 방식 : HTTP POST
-url :   http://221.221.22.11:8006(channelServer)/downstream/multicast/
+url :   http://221.221.22.11:8006(channelServer)/downstream/multicast/   
 data format
 
 ```java
@@ -282,7 +282,7 @@ data format
 ### 브로드캐스트 메시지 발신
 
 통신 방식 : HTTP POST
-url :   http://221.221.22.11:8006(channelServer)/downstream/broadcast/
+url :   http://221.221.22.11:8006(channelServer)/downstream/broadcast/    
 data format
 
 ```java
@@ -351,7 +351,7 @@ data format
 단말그룹은 그룹 메시지를 지원하기 위해서 생겨난 논리적인 단말들의 집합이다. 래셔널아울 서비스에서 제공하는 단말그룹의 특성은 다음과 같다.
 
 - 단말그룹은 앱서버에서 생성/단말 추가/단말 삭제/그룹 삭제가 가능하다.
-- 현재 그룹메시지는 다운스트림만 지원한다. (2018년 상반기 P2P 지원 예정)
+- 현재 그룹메시지는 다운스트림만 지원한다.
 - 단말그룹에 추가될 수 있는 최대 단말수는 1,000,000이다.
 - 단말그룹 생성시 지정할 수 있는 그룹내 단말 수는 2,000대이다.
 - 단말그룹에 단말 추가시 한번에 추가할 수 있는 최대 단말 수는 2,000대이다.
@@ -376,7 +376,7 @@ data format
 ### 단말그룹 생성 요청
 
 통신 방식 : HTTP POST
-url :   http://221.221.22.11:8006(channelServer)/deviceGroup/create/
+url :   http://221.221.22.11:8006(channelServer)/deviceGroup/create/   
 data format
 
 ```java
@@ -448,7 +448,7 @@ data format
 ### 단말그룹 내 단말 추가 요청
 
 통신 방식 : HTTP POST
-url :   http://221.221.22.11:8006(channelServer)/deviceGroup/add/
+url :   http://221.221.22.11:8006(channelServer)/deviceGroup/add/   
 data format
 
 ```java
@@ -513,7 +513,7 @@ data format
 ### 단말그룹 내 단말 제거 요청
 
 통신 방식 : HTTP POST
-url :   http://221.221.22.11:8006(channelServer)/deviceGroup/subtract/
+url :   http://221.221.22.11:8006(channelServer)/deviceGroup/subtract/   
 data format
 
 ```java
@@ -577,7 +577,7 @@ data format
 ### 단말그룹 삭제 요청
 
 통신 방식 : HTTP POST
-url :   http://221.221.22.11:8006(channelServer)/deviceGroup/remove/
+url :   http://221.221.22.11:8006(channelServer)/deviceGroup/remove/   
 data format
 
 ```java
@@ -632,7 +632,7 @@ data format
 ### 그룹메시지 발신
 
 통신 방식 : HTTP POST
-url :   http://221.221.22.11:8006(channelServer)/downstream/group/
+url :   http://221.221.22.11:8006(channelServer)/downstream/group/   
 data format
 
 ```java
