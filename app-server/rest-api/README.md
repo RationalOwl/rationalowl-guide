@@ -88,7 +88,7 @@ REST API를 이용하기 위해서 먼저 앱 서버를 등록한다. 하나의 
 
 주의할 점은 API호출시 전달하는 앱서버 등록이름과 등록결과 발급받은 앱서버 등록 아이디와 채널서버 URL을 반드시 저장/관리해야 한다. REST API를 통해 앱서버 등록이 성공했으면 해당 앱서버는 다시 등록 요청할 필요가 없다. 기등록한 앱서버가 다시 등록 요청할 경우 앱서버 등록 이름이 이전에 등록할 때와 다르면 래셔널아울 서비스에서는 다른 앱서버가 등록 요청하는 것으로 인식하여 앱서버를 새로 등록하게 된다.
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://gate.rationalowl.com:8006/server/register/   
 data format
 
@@ -139,7 +139,7 @@ data format
 
 ### 앱서버 등록 해제 요청
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://gate.rationalowl.com:8006/server/unregister/   
 data format
 
@@ -203,7 +203,7 @@ data format
 
 ### 멀티캐스트 메시지 발신
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://221.221.22.11:8006(channelServer)/downstream/multicast/   
 data format
 
@@ -281,7 +281,7 @@ data format
 
 ### 브로드캐스트 메시지 발신
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://221.221.22.11:8006(channelServer)/downstream/broadcast/    
 data format
 
@@ -375,7 +375,7 @@ data format
 
 ### 단말그룹 생성 요청
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://221.221.22.11:8006(channelServer)/deviceGroup/create/   
 data format
 
@@ -447,7 +447,7 @@ data format
 
 ### 단말그룹 내 단말 추가 요청
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://221.221.22.11:8006(channelServer)/deviceGroup/add/   
 data format
 
@@ -512,7 +512,7 @@ data format
 
 ### 단말그룹 내 단말 제거 요청
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://221.221.22.11:8006(channelServer)/deviceGroup/subtract/   
 data format
 
@@ -576,7 +576,7 @@ data format
 
 ### 단말그룹 삭제 요청
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://221.221.22.11:8006(channelServer)/deviceGroup/remove/   
 data format
 
@@ -631,7 +631,7 @@ data format
 
 ### 그룹메시지 발신
 
-통신 방식 : HTTP POST\
+통신 방식 : HTTP POST<br/>
 url :   http://221.221.22.11:8006(channelServer)/downstream/group/   
 data format
 
