@@ -44,7 +44,7 @@
 안드로이드 단말 앱을 개발하기 위해서 먼저 안드로이드용 래셔널아울 단말 앱 라이브러리를 다운로드 받는다.
 본 문서는 안드로이드 스튜디오 개발환경을 기준으로 설명한다.
 
-- Android 단말앱 라이브러리 [rational-android-1.1.2.aar](http://guide.rationalowl.com/download/device-app/android/rational-android-1.1.2.aar)를 다운받는다.
+- [Android 단말앱 라이브러리를 다운](https://guide.rationalowl.com/library){:target="_blank"} 받는다.
 
 - 안드로이드 스튜디오를 런칭하고 다운받은 라이브러리를 libs 폴더내에 복사한다.
 
