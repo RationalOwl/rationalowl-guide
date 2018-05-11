@@ -125,7 +125,7 @@
 
 - 브라우저로 [www.rationalowl.com](http://www.rationalowl.com) 클릭
 
-![이미지 이름](./img/www.png)
+![이미지 이름](./img/www.jpg)
 
 - LOGIN 버튼 클릭
 
@@ -538,7 +538,7 @@ serverMgr.sendGroupMsg(data, grpId, supportMsgQ, notiTitle, notiBody);
 
 메시지 전달 현황은 관리자 콘솔의 '서비스 > 메시지 현황'에서 실시간 모니터링이 가능하다.
 
-![이미지 이름](./img/msg_monitoring.png)
+![이미지 이름](./img/msg_monitoring.gif)
 
 ### 업스트림 메시지
 
