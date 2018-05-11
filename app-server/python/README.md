@@ -47,7 +47,7 @@
 
 >##  앱 서버 라이브러리 적용
 
-1. Python 앱서버 라이브러리 [??.jar](http://guide.rationalowl.com/download/??)를 다운받는다.
+1. <a href="https://guide.rationalowl.com/library" target="_blank">Python 앱서버 라이브러리를 다운</a> 받는다.
 
 2. 압축을 푼 후 해당 폴더에서 터미널로 아래 명령어를 실행한다.
 

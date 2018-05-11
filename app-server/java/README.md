@@ -53,8 +53,8 @@
 JAVA 앱서버 개발을 위한 설정은 JAVA 앱서버 라이브러리를 개발 환경에 포함하는 것이 전부다.
 본 문서는 이클립스 개발환경을 기준으로 설명한다.
 
+1. <a href="https://guide.rationalowl.com/library" target="_blank">JAVA 앱서버 라이브러리를 다운</a> 받는다.
 
-1. JAVA 앱서버 라이브러리 [rational-app-server-java1.1.2.jar](http://guide.rationalowl.com/download/rational-app-server-java1.1.2.jar)를 다운받는다.
 
 2. 이클립스 프로젝트를 생성하고 다운받은 라이브러리를 libs 폴더내에 복사한다.
 
