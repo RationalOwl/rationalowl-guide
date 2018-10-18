@@ -174,6 +174,8 @@
 
 ### 앱서버 등록(구동)
 
+앱서버 개발은 앱서버 개발가이드를 참조하여 스텝바이스텝으로 개발 가능하다. 본 글에서는 [JAVA 앱서버 개발가이드](https://guide.rationalowl.com/guide/app-server/java)를 기준으로 설명한다.
+
 앱서버는 registerAppServer() API를 통해 앱 서버를 등록한다. 참고로 하나의 래셔널아울 고객 서비스 내에서 다수의 앱 서버 등록이 가능하다.
 
 래셔널아울 관리자 콘솔은 앱서버 등록 결과에 대해 실시간 모니터링을 제공한다.
@@ -251,7 +253,7 @@ public void onUnregisterResult(int resultCode, String resultMsg) {
 unregisterAppServer() API호출 결과는 관리자 콘솔의 '서비스 > 서버 현황'에서 실시간으로 확인할 수 있다.
 
 ### 단말앱 등록
-
+단말앱 개발은 단말앱 개발가이드를 참조하여 스텝바이스텝으로 개발 가능하다. 본 글에서는 [안드로이드 단말앱 개발가이드](https://guide.rationalowl.com/guide/device-app/android)를 기준으로 설명한다.
 단말앱은 registerDevice() API를 통해 단말앱을 등록한다. 
 래셔널아울 관리자 콘솔은 단말앱 등록 결과에 대해 실시간 모니터링을 제공한다.
 
