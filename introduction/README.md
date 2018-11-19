@@ -122,7 +122,7 @@
 
 래셔널아울 서비스를 이용하기 위해서 가장 먼저 고객 등록이 필요하다.
 
-- 브라우저로 [www.rationalowl.com](http://www.rationalowl.com) 클릭
+- 브라우저로 [www.rationalowl.com](https://www.rationalowl.com) 클릭
 
 ![이미지 이름](./img/www.jpg)
 

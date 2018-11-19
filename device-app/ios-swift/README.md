@@ -99,7 +99,7 @@
 
 #### Bridging-Header 파일 적용
 
-래셔널아울 IOS 단말앱 라이브러리[RationalOwl.framework](http://guide.rationalowl.com/download/device-app/ios/objective-c/Rationalowl.framework)는 Objective-C로 만들어진 라이브러리이다. Swift단말앱에서 해당 라이브러리를 이용하기 위해서는 Bridging Header파일을 적용하면 된다.
+래셔널아울 IOS 단말앱 라이브러리[RationalOwl.framework](https://github.com/RationalOwl/rationalowl-sample/tree/master/device-app/ios-object-c/RationalOwl.framework)는 Objective-C로 만들어진 라이브러리이다. Swift단말앱에서 해당 라이브러리를 이용하기 위해서는 Bridging Header파일을 적용하면 된다.
 
 - 'sample-Bridging-Header.h' 파일을 생성 후 #import <RationalOwl/RationalOwl.h> 를 추가한다.
 
