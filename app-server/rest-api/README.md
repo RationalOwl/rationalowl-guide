@@ -221,8 +221,8 @@ data format
   }",
   //optional fields
  "notiTitle":"notification title here",
- "notiBody":"notification body here"
-
+ "notiBody":"notification body here",
+ "notiSound":"my_custom_sound.wav"
 }
 ```
 
@@ -252,7 +252,9 @@ data format
 - notiTitle
   - 알림 제목 : 단말앱이 백그라운드/종료시 알림창에 표시할 제목
 - notiBody
-  - 알림 내용 : 단말앱이 백그라운드/종료시 알림창에 표시할 내용, 미설정시 data가 표시
+  - 알림 내용 : 단말앱이 백그라운드/종료시 알림창에 표시할 내용
+- notiSound
+  - 알림음 : 사용자 지정 알림음, 미설정시 기본 알림음이 울림
 
 ### 멀티캐스트 메시지 발신 결과
 
@@ -298,7 +300,8 @@ data format
   }"
  //optional fields
  "notiTitle":"notification title here",
- "notiBody":"notification body here"
+ "notiBody":"notification body here",
+ "notiSound":"my_custom_sound.wav"
 
 }
 ```
@@ -323,7 +326,9 @@ data format
 - notiTitle
   - 알림 제목 : 단말앱이 백그라운드/종료시 알림창에 표시할 제목
 - notiBody
-  - 알림 내용 : 단말앱이 백그라운드/종료시 알림창에 표시할 내용, 미설정시 data가 표시
+  - 알림 내용 : 단말앱이 백그라운드/종료시 알림창에 표시할 내용
+- notiSound
+  - 알림음 : 사용자 지정 알림음, 미설정시 기본 알림음이 울림
 
 ### 브로드캐스트 메시지 발신 결과
 
@@ -648,7 +653,8 @@ data format
   }"
  //optional fields
  "notiTitle":"notification title here",
- "notiBody":"notification body here"
+ "notiBody":"notification body here",
+ "notiSound":"my_custom_sound.wav"
 }
 ```
 
@@ -675,7 +681,9 @@ data format
 - notiTitle
   - 알림 제목 : 단말앱이 백그라운드/종료시 알림창에 표시할 제목
 - notiBody
-  - 알림 내용 : 단말앱이 백그라운드/종료시 알림창에 표시할 내용, 미설정시 data가 표시
+  - 알림 내용 : 단말앱이 백그라운드/종료시 알림창에 표시할 내용
+- notiSound
+  - 알림음 : 사용자 지정 알림음, 미설정시 기본 알림음이 울림
 
 ### 그룹메시지 발신 결과
 
