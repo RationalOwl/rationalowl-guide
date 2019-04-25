@@ -470,6 +470,9 @@ serverMgr.sendGroupMsg(data, grpId, supportMsgQ, notiTitle, notiBody);
 - 사용자가 원하는 푸시 알림 동작 지원
     - 이미지 푸시 알림, 팝업 푸시 알림, 동영상 푸시 알림
 - 커스텀 데이터를 키/값 쌍으로 세팅하여 sendCustomPush API를 호출한다.
+    - sendMulticastCustomPush
+    - sendBroadcastCustomPush
+    - sendGroupCustomPush
 
 
 ```java
