@@ -339,12 +339,19 @@ unregisterDevice() API의 파라미터는 다음과 같다.
 - 다운스트림 데이터
   - 앱서버에서 단말앱으로의 데이터 통신
   - 실시간 데이터 통신 지원
+  - 데이터 전달(메시지 수신 확인) 여부 트래킹 지원
   - 푸시 메시지 지원
     - 푸시 알림 지원
     - 큐잉 지원   
+  - 커스텀 푸시
+    - 푸시 알림 전달 여부 트래킹 지원
+    - 이미지 푸시, 팝업 푸시
+    - 사용자가 원하는 모든 동작 가능
+
 - 업스트림 데이터
   - 단말앱에서 앱서버로의 데이터 통신
   - 실시간 데이터 통신 지원
+  - custom push 지원(2019년 2월 추가)
 - P2P 데이터
   - 단말앱간 데이터 통신
   - 실시간 데이터 통신 지원
@@ -380,6 +387,7 @@ unregisterDevice() API의 파라미터는 다음과 같다.
 - 멀티캐스트
 - 브로드캐스트
 - 그룹메시지
+- 커스텀 푸시(사용자 지정 푸시)
 
 메시지 발신 API 파라미터에 따라 아래의 용도로 구분된다.
      
@@ -449,6 +457,36 @@ serverMgr.sendBroadcastMsg(data, supportMsgQ, notiTitle, notiBody);
 ```java
 AppServerManager serverMgr = AppServerManager.getInstance();
 serverMgr.sendGroupMsg(data, grpId, supportMsgQ, notiTitle, notiBody);
+```
+
+#### 커스텀 푸시(사용자 지정 푸시)
+
+금융앱, 마케팅앱, 보안앱, 헬쓰앱 등 푸시알림 자체의 전달 여부가 중요한 앱들은 푸시알림 전달 자체가 중요하다. 이러한 앱들은 푸시 알림 미전달시 유료 메시지(SMS/알림톡)을 재발신하는 경우가 대부분인데 이러한 앱들은 커스텀 푸시의 이용을 권장한다.
+
+- 4초 이내 푸시 알림 전달 여부 트래킹/모니터링 지원
+- 동시 십만 이상 대량 푸시 발신에도 4초 이내 푸시 알림 전달 여부 트래킹
+- 푸시 전달 대상 유료 메시지(SMS/알림톡) 중복 발신 방지
+- 유료 메시지 비용의 회기적인 감소 효과 
+- 사용자가 원하는 푸시 알림 동작 지원
+    - 이미지 푸시 알림, 팝업 푸시 알림, 동영상 푸시 알림
+- 커스텀 데이터를 키/값 쌍으로 세팅하여 sendCustomPush API를 호출한다.
+
+
+```java
+            // {
+            //    "notiType":"IMAGE",
+            //    "myNotiTitle":"my custom push title",
+            //    "myNotiBody":"my custom push text body",
+            //    "myImage":"www.myimage.com/images/img1.jpg",
+            //    "mySound":"www.mysound.com/sounds/sound1.wav",            
+            //    "myCustomKey":"myKey"
+            // }
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("notiType", "IMAGE");
+            data.put("notiTitle", notiTitle);
+            data.put("notiBody", notiBody);    
+            data.put("imgUrl", imgUrl);    
+            serverMgr.sendMulticastCustomPush(data, regIDs);
 ```
 
 #### 다운스트림 메시지 수신
