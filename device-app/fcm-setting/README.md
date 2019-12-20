@@ -38,42 +38,146 @@
 
 6. 프로젝트 레벨 'build.gradle' depencies에 google-services를 추가한다.
 
-![이미지 이름](./img/add_prj6.png)
+최신 안드로이드 단말앱 라이브러리는 <a href="https://guide.rationalowl.com/library" target="_blank">Android 샘플앱</a>
+의 프로젝트레벨의 build.gradle을 참조한다.
 
-7. 앱 레벨 'build.gradle' depencies에 firebase-core와 firebase-messaging을 추가한다.
+아래는 2019년 12월 기준 샘플앱의 프로젝트레벨 build.gradle의 dependencies 부분이다.
 
-![이미지 이름](./img/add_prj7.png)
+```java
+dependencies {
+    ...
+
+    classpath 'com.android.tools.build:gradle:3.3.0'
+    classpath 'com.google.gms:google-services:4.1.0'
+
+    ...
+}
+```
+
+7. 앱 레벨 'build.gradle' depencies에 FCM 라이브러리를 추가한다.
+
+최신 안드로이드 단말앱 라이브러리는 <a href="https://guide.rationalowl.com/library" target="_blank">Android 샘플앱</a>
+의 앱레벨의 build.gradle을 참조한다.
+
+// FCM library 환경을 그대로 카피하여 적용하면 된다.
+
+아래는 2019년 12월 기준 샘플앱의 앱레벨 build.gradle의 dependencies 부분이다.
+최근 안드로이드 샘플앱의 FCM library뿐 아니라 RationalOwl library 및 RationalOwl using library를 그대로
+카피하면 된다.
+
+```java
+dependencies {
+    ...
+
+    // RationalOwl library
+    implementation 'com.rationalowl.minerva.client.android:rationalowl-android:1.1.7'
+    // RationalOwl using library
+    implementation 'android.arch.lifecycle:extensions:1.1.0'
+
+    // FCM library
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
+    ...
+}
+```
+
 
 
 ## FCM 안드로이드 단말앱 적용
 
-FCM 푸시 알림을 안드로이드 단말앱에 적용하기 위해서 를 처리하기 위해서는 FirebaseInstanceIdService를 구현해야 한다.
+FCM 푸시 알림을 안드로이드 단말앱에 적용하기 위해서 를 처리하기 위해서는 FirebaseMessagingService 구현해야 한다.
 
-1. FCM 단말 토큰 생성시 호출되는 서비스인 FirebaseInstanceIdService를 상속한 클래스
+1. FCM 단말 토큰 생성시 호출되는 서비스인 onNewToken(String token) 메소드를 구현한다.
+    - 해당 함수내에서 setDeviceToken() API를 호출해야 한다.
+
+2. 커스텀(Customizable Push)를 처리하는 onMessageReceived(RemoteMessage remoteMessage)를 구현한다.
+    - 해당 함수내에서 enableNotificationTracking() API를 호출해야 한다.
+
+아래는 2019년 12월 기준 샘플앱이다.
 
 
 ```java
-public class MyFcmTokenService extends FirebaseInstanceIdService {
+public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "MyFcmTokenService";
+    private static final String TAG = "MyFirebaseMsgService";
+
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
      * the previous token had been compromised. Note that this is called when the InstanceID token
      * is initially generated so this is where you would retrieve the token.
      */
-
     @Override
-    public void onTokenRefresh() {
-        // Get updated InstanceID token.
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
-
+    public void onNewToken(String token) {
+        Logger.debug(TAG, "onNewToken token: " + token);
+        // just call setDeviceToken() API
         MinervaManager minMgr = MinervaManager.getInstance();
-        minMgr.setDeviceToken(refreshedToken);
+        minMgr.setDeviceToken(token);
+
+        // there's no need to do anything else
     }
 
-}   
+
+    /**
+     * Called when message is received.
+     *
+     * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
+     */
+    // [START receive_message]
+    @Override
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        Logger.debug(TAG, "onMessageReceived enter");
+        Map<String, String> data = remoteMessage.getData();
+
+        // set notification  delivery tracking
+        MinervaManager minMgr = MinervaManager.getInstance();
+        minMgr.enableNotificationTracking(data);
+
+
+        // TODO(developer): Handle FCM messages here.
+        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
+
+        showCustomNotification(data);
+    }
+
+
+    /**
+     * Create and show user defined custom notification such as image/rich notification.
+     *
+     * @param data FCM message body.
+     */
+    private void showCustomNotification(Map<String, String> data) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this, "defaultChannelId")
+                        .setSmallIcon(R.drawable.icon)
+                        .setContentTitle("content title")
+                        .setContentText("content text")
+                        .setAutoCancel(true)
+                        .setSound(defaultSoundUri)
+                        .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("defaultChannelId",
+                    "FCM Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+}
 ```
 
 - 토큰 생성 및 갱신시 호출되는 콜백인 onTokenRefresh()에서 MinervaManager.setDeviceToken()을 호출해야 한다.

@@ -42,31 +42,41 @@
 
 ## 단말앱 라이브러리 적용
 
-안드로이드 단말 앱을 개발하기 위해서 먼저 안드로이드용 래셔널아울 단말 앱 라이브러리를 다운로드 받는다.
-본 문서는 안드로이드 스튜디오 개발환경을 기준으로 설명한다.
+최신 안드로이드 단말앱 라이브러리는 <a href="https://guide.rationalowl.com/library" target="_blank">Android 샘플앱</a>
+의 앱레벨의 build.gradle을 참조한다.
 
-- <a href="https://guide.rationalowl.com/library" target="_blank">Android 단말앱 라이브러리를 다운</a> 받는다.
+build.gradle의 dependencies에서 // RationalOwl library이 그것이다.
+dependencies에서 RationalOwl using library, // FCM library 환경을 그대로 카피하여 적용하면 된다.
 
-- 안드로이드 스튜디오를 런칭하고 다운받은 라이브러리를 libs 폴더내에 복사한다.
+아래는 2019년 12월 기준 샘플앱 build.gradle의 dependencies 부분이다.
 
-![이미지 이름](./img/lib_add.png)
+```java
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-- 탑레벨(프로젝트 레벨) build.gradle 파일에 파일에 'flatDir { dirs 'libs' }'이 삽입되어 있어야 한다.
+    // RationalOwl library
+    implementation 'com.rationalowl.minerva.client.android:rationalowl-android:1.1.7'
+    // RationalOwl using library
+    implementation 'android.arch.lifecycle:extensions:1.1.0'
 
-![이미지 이름](./img/top_build.png)
+    // FCM library
+    implementation 'com.google.firebase:firebase-core:16.0.6'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
-- 앱레벨 build.gradle 파일에 세 라이브러리가 디펜던시에 명시되어야 한다.
-  - 래셔널아울 단말앱 라이브러리(예:com.rationalowl.Minerva.client.android:ro-android-1.1.2:1.1.2@aar)
-  - 라이프사이클 라이브러리 (android.arch.lifecycle:extensions:1.1.0)
-  - FCM 라이브러리(com.google.firebase:firebase-core, com.google.firebase-messaging)
-
-![이미지 이름](./img/dependency.png)
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+```
 
 ## FCM 적용
 
-안드로이드 마쉬멜로 이전에는 백그라운드의 제한이 없어서 안드로이드 단말앱에서 래셔널아울 단말앱 라이브러리를 통해 실시간 푸시 알림이 가능하였다.
+안드로이드8.0(오레오) 이전에는 백그라운드의 제한이 없어서 안드로이드 단말앱에서 래셔널아울 단말앱 라이브러리를 통해 실시간 푸시 알림이 가능하였다.
 
-그러나 안드로이드 마쉬멜로의 백그라운드 제한과 결정적으로 안드로이드 오레오의 등장으로 사실상 단말앱이 백그라운드시 퍼블릭 푸시가 유일한 알림 수단이 되었다. 따라서 현재 래셔널아울 서비스도 안드로이드 단말이 백그라운드일 경우 FCM을 통해 알림을 보낸다.
+그러나 안드로이드 오레오의 등장으로 사실상 단말앱이 백그라운드시 퍼블릭 푸시가 유일한 알림 수단이 되었다. 따라서 현재 래셔널아울 서비스도 안드로이드 단말이 백그라운드일 경우 FCM을 통해 알림을 보낸다.
 
 [FCM 설정 가이드](https://github.com/RationalOwl/rationalowl-guide/tree/master/device-app/fcm-setting)를 통해 FCM설정한다.
 
