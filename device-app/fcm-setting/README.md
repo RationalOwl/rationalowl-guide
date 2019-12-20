@@ -180,8 +180,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 }
 ```
 
-- 토큰 생성 및 갱신시 호출되는 콜백인 onTokenRefresh()에서 MinervaManager.setDeviceToken()을 호출해야 한다.
-
 이로써 안드로이드 단말앱 설정이 끝났다.
 
 ## FCM 서버키 등록
