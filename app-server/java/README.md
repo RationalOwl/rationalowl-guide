@@ -81,7 +81,12 @@ registerAppServer() API를 통해 앱서버를 원하는 서비스의 서버로 
 
 ```java
 AppServerManager serverMgr = AppServerManager.getInstance();
+// 공용에디션일 경우
 serverMgr.registerAppServer("myServiceId", "app server1", "gate.rationalowl.com", 9080);
+
+// 전용에디션(구축형) 앱서버와 메시징 서버가 같은 사설망에서 운영시 
+serverMgr.registerAppServer("myServiceId", "app server1", "192.168.0.11", 9080, true);
+
 ```
 
 ### 앱서버 등록 결과
