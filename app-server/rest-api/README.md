@@ -95,7 +95,10 @@ data format
 ```java
 {
   "serviceId":"service id here",
-  "registerName":"displayed app server name"
+  "registerName":"displayed app server name",
+
+  // optional : 전용 에디션(구축형)에서 메시징 서버와 같은 private network에 앱서버가 운영될 경우 세팅.
+  "privateNetwork":1
 }
 ```
 
@@ -107,6 +110,12 @@ data format
 - registerName
   - 앱 서버를 콘솔에서 표시할 이름
   - 콘솔에서 앱서버를 확인하는 용도로 이용
+
+#### 옵션 필드
+
+- privateNetwork
+  - 전용 에디션(구축형)에서 메시징 서버와 같은 private network에 앱서버가 운영될 경우 1 세팅
+  - channelServer 값이 private network로 반환된다.
 
 ### 앱서버 등록 결과
 
