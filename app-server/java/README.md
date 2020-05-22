@@ -418,8 +418,282 @@ class SimpleMessageListener implements MessageListener {
 ```
 
 
+>## 커스텀푸시
+
+이미지 푸시와 팝업 푸시 등 앱 성격에 맞게 푸시알림의 형태를 임의로 표현할 수 있다. 리치 노티피케이션(Rich Notification)이라고도 회자되는데 커스텀푸시(Customizable Push)라는 용어가 가장 적절할 것 같다. 래셔널아울 서비스에서는 이를 커스텀 푸시라는 용어로 통일하여 사용한다. 커스텀푸시는 기존 리치 노티피케이션에 실시간 트래킹과 모니터링 기능을 추가한 개념이다.
+
+커스텀 푸시의 전반적인 개념은 아래 서비스 블로그 문서를 참조하는 것이 효과적이다.
+
+- [커스텀푸시 개념](https://rationalowl.tistory.com/20) 
+
+## 커스텀푸시 멀티캐스트
+  - 한대 이상의 단말앱에 메시지를 발신한다.  
+  - 한번에 보낼 수 있는 최대 대상 단말 수는 2000대이다.
+  
+### 커스텀푸시 멀티캐스트 메시지 발신
+sendMulticastCustomPush() API를 통해 멀티캐스트 메시지를 발신한다.
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+String data = "multicast message test";
+ArrayList<String> devices = new ArrayList<String>();
+devices.add("device registration id1");
+devices.add("device registration id2");
+Map<String, Object> data = new HashMap<String, Object>();
+data.put("myNotiTitle", "커스텀 알람 타이틀");
+data.put("myNotiBody", "이미지url로 나만의 알림을 표현하세요!");
+data.put("imageUrl", "http://your.image.com/image1.jpg");
+data.put("soundUrl", "http://your.sound.com/sound1.wav");           
+serverMgr.sendMulticastCustomPush(data, regIDs);
+```
+
+### 커스텀푸시 멀티캐스트 메시지 발신 결과
+메시지 발신 결과는 MessageListener 인터페이스의 onSendMulticastCustomPushResult()를 통해 알 수 있다.
+해당 콜백은 메시지 발신 성공 여부에 대해서만 알려준다. 
+
+```java
+public void onSendMulticastCustomPushResult(int resultCode, String resultMsg, String msgId, String requestId) {
+    output("onSendMulticastMsgResult:" + resultCode + "msg = " + msgId);
+
+    if(resultCode == Result.RESULT_OK) {
+       // multicast message has sent successfully
+    }    
+}
+```
+
+
+## 커스텀푸시 브로드캐스트
+  - 고객 서비스내에 등록된 모든 단말앱들에게 메시지를 발신한다.
+  
+### 커스텀푸시 브로드캐스트 메시지 발신
+sendBroadcastCustomPush() API를 통해 브로드캐스트 메시지를 발신한다.
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+Map<String, Object> data = new HashMap<String, Object>();
+data.put("key1",  "dddd");
+data.put("key2", 2);
+data.put("key3", "value3");           
+serverMgr.sendBroadcastCustomPush(data);
+```
+
+### 커스텀푸시 브로드캐스트 메시지 발신 결과
+메시지 발신 결과는 MessageListener 인터페이스의 onSendBroadcastMsgResult()를 통해 알 수 있다.
+
+```java
+public void onSendBroadcastCustomPushResult(int resultCode, String resultMsg, String requestId) {
+    output("onSendBroadcastCustomPushResult:" + resultCode + "msg = " + msgId);
+    
+    if(resultCode == Result.RESULT_OK) {
+       // broadcast message has sent successfully
+    }      
+}
+```
+
+
+## 커스텀푸시 그룹메시지
+그룹메시지는 단말그룹에게 메시지를 발신하는 방식으로 기능적으로 전통적인 통신방식인 멀티캐스트와 동일하다.
+그룹 메시지 방식은 효율적이고 확장성이 높은 pub/sub 메시지 모델로 구현되었으며 동일한 대상 단말수일 경우 그룹 메시지 방식이 약 20% 전송속도가 빠르다. 따라서 1회성 또는 단발성 통신을 제외하고는  멀티캐스트 API보다는 그룹메시지 API의 사용을 권고한다.
+  
+### 커스텀푸시 그룹메시지 발신
+sendBroadcastMsg() API를 통해 브로드캐스트 메시지를 발신한다.
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+String grpId = "deviceGroupId1";
+Map<String, Object> data = new HashMap<String, Object>();
+data.put("key1", "value1");
+data.put("key2", 2);
+data.put("key3", "value3");   
+serverMgr.sendGroupCustomPush(data, grpId);
+```
+
+### 커스텀푸시 그룹메시지 발신 결과
+메시지 발신 결과는 MessageListener 인터페이스의 onSendGroupCustomPushResult()를 통해 알 수 있다.
+
+```java
+public void onSendGroupCustomPushResult(int resultCode, String resultMsg, String requestId) {
+    output("onSendGroupCustomPushResult:" + resultCode + "msg = " + msgId);
+    
+    if(resultCode == Result.RESULT_OK) {
+       // group message has sent successfully
+    }      
+}
+```
+
+
+## 커스텀푸시 재발신
+앞서 위의 세 커스텀 푸시 발신 API로 발신 후 알림 미전달 혹은 알림수신 미확인 대상 사용자 폰에 재발신한다.
+  
+### 커스텀푸시 그룹메시지 발신
+retryCustomPush() API를 통해 재발신한다.
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+String msgId = "your msg id";
+int retryCondition = 1; // 1: 알림미전달 단말 대상 재 발신, 2: 수신미확인 단말 대상 재 발신     
+serverMgr.retryCustomPush(msgId, 1);  
+```
 
 
 
+## 메시지 전달 트래킹(메시지 통계 정보)
+
+  한번에 다수의 메시지 전달통계를 실시간 확인한다. 
+  - 커스텀푸시 및 실시간 메시지 모두 지원한다.
+  - 한번에 최대 100개 메시지 아이디 지정
+  - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.   
+  
+### 메시지 전달 트래킹(메시지 통계 정보) API
+ 
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();   
+ArrayList<String> msgIds = new ArrayList<String>();
+msgIds.add("msgId1");
+msgIds.add("msgId2");
+...
+msgIds.add("msgId100");
+serverMgr.msgStatsTracking(msgIds);
+// same as serverMgr.sendBroadcastMsg(data);
+output("msg stats tracking request msgId list :" + msgIds);
+```
+
+### 메시지 전달 트래킹(메시지 통계 정보) API 결과
+메시지 발신 결과는 MsgTrackingListener 인터페이스의 onMsgStatsTrackingResult()를 통해 알 수 있다.
+
+```java
+class SimpleTrackingListener implements MsgTrackingListener {
+
+    @Override
+    public void onMsgStatsTrackingResult(int resultCode, String resultMsg, ArrayList<Map<String, Object>> msgStats, String requestId) {
+        output("onMsgStatsTrackingResult:" + resultCode + "msg = " + resultMsg  + "msgStats = " + msgStats );
+    }
+}
+```
 
 
+
+## 메시지 전달 트래킹(메시지 상태별 단말앱 목록)
+
+  하나의 커스텀푸시 메시지 상태별 단말앱 목록을 실시간 트래킹한다.
+ - 알림 미전달 단말앱 목록만 트래킹하여 알림 미전달 단말앱 대상 유료 메시지 발신시 유용하다.   
+ - 멀티캐스트, 그룹메시지, 브로드캐스트로 동시에 1000단말앱이상 발신한 메시지의 트래킹에 효과적이다.
+ - 100만 단말앱에 동시에 커스텀 푸시 발신시에도 1분대에 전체 발신 및 전달 및 수신확인 여부 실시간 트래킹이 가능하다.
+ - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.   
+  
+### 메시지 전달 트래킹(메시지 상태별 단말앱 목록) API
+ 
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance(); 
+serverMgr.msgDevicesTracking(msgId, msgState, deviceType, startIdx, fetchSize);
+```
+
+### 메시지 전달 트래킹(메시지 상태별 단말앱 목록) API 결과
+메시지 발신 결과는 MsgTrackingListener 인터페이스의 onMsgDevicesTrackingResult()를 통해 알 수 있다.
+
+```java
+class SimpleTrackingListener implements MsgTrackingListener {
+
+    @Override
+    public void onMsgDevicesTrackingResult(int resultCode, String resultMsg, String msgId, int startIndex, int totalDeviceSize, int fetchDeviceSize, ArrayList<String> deviceList, String requestId) {
+        output("onSendGroupCustomPushResult:" + resultCode + "msg = " + resultMsg + " msgId =" + msgId + " startIndex=" + startIndex + " totalDeviceSize=" + totalDeviceSize 
+                + " fetchDeviceSize = " + fetchDeviceSize + " deviceList = " + deviceList);
+    }
+}
+```
+
+
+## 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보)
+
+  하나의 커스텀푸시 메시지 상태별 단말앱 상세정보를 실시간 트래킹한다.
+   - 멀티캐스트, 그룹메시지, 브로드캐스트로 동시에 1000단말앱이상 발신한 메시지의 트래킹에 효과적이다.
+   - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.   
+  
+### 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보) API
+ 
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance(); 
+serverMgr.msgDeviceDetailTracking(msgId, msgState, deviceType, startIdx, fetchSize);
+```
+
+### 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보) API 결과
+메시지 발신 결과는 MsgTrackingListener 인터페이스의 onMsgDeviceDetailTrackingResult()를 통해 알 수 있다.
+
+```java
+class SimpleTrackingListener implements MsgTrackingListener {
+
+    @Override
+    public void onMsgDeviceDetailTrackingResult(int resultCode, String resultMsg, String msgId, int startIndex, int totalDeviceSize, int fetchDeviceSize, ArrayList<Map<String, Object>> msgDetail, String requestId) {
+        // TODO Auto-generated method stub
+        output("onSendGroupCustomPushResult:" + resultCode + "msg = " + resultMsg + " msgId =" + msgId + " startIndex=" + startIndex + " totalDeviceSize=" + totalDeviceSize 
+                + " fetchDeviceSize = " + fetchDeviceSize + " msgDetail = " + msgDetail);
+    }
+}
+```
+
+
+## 배치 메시지 전달 트래킹(메시지 상태별 단말앱 목록)
+
+  한번에 다수의 메시지를 트래킹시 사용한다.
+   - 커스텀푸시 메시지 상태별 단말앱 목록을 실시간 트래킹한다.
+   - 개별로 전달하는 개인화 메시지나 대상 단말앱이 1000미만인 메시지인 경우 동시에 여러 메시지에 대한 트래킹시 이용한다.
+   - 한번에 최대 100메시지 트래킹 지원
+   - 전체 메시지의 대상 단말앱 수가 1000미만이어야 한다.
+   - 알림 미전달 단말앱 목록만 트래킹하여 알림 미전달 단말앱 대상 유료 메시지 발신시 유용하다.
+   - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.     
+  
+### 배치 메시지 전달 트래킹(메시지 상태별 단말앱 목록) API
+ 
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();   
+serverMgr.batchMsgDevicesTracking(msgIds, msgStateFlag);
+```
+
+### 배치 메시지 전달 트래킹(메시지 상태별 단말앱 목록) API 결과
+메시지 발신 결과는 MsgTrackingListener 인터페이스의 onBatchMsgDeviceDetailTrackingResult()를 통해 알 수 있다.
+
+```java
+class SimpleTrackingListener implements MsgTrackingListener {
+
+    @Override
+    public void onBatchMsgDeviceDetailTrackingResult(int resultCode, String resultMsg, ArrayList<Map<String, Object>> msgs, String requestId) {
+        // TODO Auto-generated method stub
+        output("onBatchMsgDeviceDetailTrackingResult:" + resultCode + "msg = " + resultMsg  + "msgs = " + msgs );
+    }
+}
+```
+
+## 배치 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보)
+
+ 한번에 다수의 메시지를 트래킹시 사용한다.
+   - 커스텀푸시 메시지 상태별 단말앱 상세정보를 실시간 트래킹한다.
+   - 개별로 전달하는 개인화 메시지나 대상 단말앱이 1000미만인 메시지인 경우 동시에 여러 메시지에 대한 트래킹시 이용한다.
+   - 한번에 최대 100메시지 트래킹 지원
+   - 전체 메시지의 대상 단말앱 수가 1000미만이어야 한다.
+   - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.
+  
+### 배치 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보) API
+ 
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();   
+serverMgr.batchMsgDeviceDetailTracking(msgIds, msgStateFlag);
+```
+
+### 배치 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보) API 결과
+메시지 발신 결과는 MsgTrackingListener 인터페이스의 onBatchMsgDeviceDetailTrackingResult()를 통해 알 수 있다.
+
+```java
+class SimpleTrackingListener implements MsgTrackingListener {
+
+    @Override
+    public void onBatchMsgDeviceDetailTrackingResult(int resultCode, String resultMsg, ArrayList<Map<String, Object>> msgs, String requestId) {
+        // TODO Auto-generated method stub
+        output("onBatchMsgDeviceDetailTrackingResult:" + resultCode + "msg = " + resultMsg  + "msgs = " + msgs );
+    }
+}
+```
