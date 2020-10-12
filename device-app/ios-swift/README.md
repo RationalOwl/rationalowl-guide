@@ -54,10 +54,16 @@
 
 ### 개발 전 IOS 설정
 
-[IOS 설정 가이드](https://github.com/RationalOwl/rationalowl-guide/tree/master/device-app/ios-setting)를 통해 개발 전 아래 설정을 먼저 진행해야 한다.
+IOS 단말앱이 미실행시에는 실시간 메시지 수신이 불가하며 퍼블릭 푸시 알림 수신만 가능하다. IOS 푸시알림 설정 방식은 두 가지이다. 래셔널아울은 두 가지 방식을 모두 지원하며 매년 갱신이 불필요한 인증키 방식을 권고한다.
 
-- APNS 발신용 인증서 생성 및 래셔널아울 서비스에 등록
-- 프로비저닝 프로파일 설정
+1. 인증키 방식
+ - 안드로이드 FCM 인증키 방식과 동일하다.
+ - .p8 인증키 파일을 통해 한번 등록하면 매년 갱신할 필요없이 영구적으로 사용 가능하다.
+ - [APNS 인증키 방식 설정](https://github.com/RationalOwl/rationalowl-guide/tree/master/device-app/ios-apns-p8)
+
+2. 인증서 방식
+ - .p12 인증서를 통한 인증 방식으로 매년 갱신해야 하는 번거로움이 있다.
+ - [APNS 인증서 방식 설정](https://github.com/RationalOwl/rationalowl-guide/tree/master/device-app/ios-apns-p12)
 
 ### 개발 단계 설정
 
