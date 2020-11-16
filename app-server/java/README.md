@@ -40,7 +40,7 @@
 |             | 그룹메시지 | 멀티캐스트
 ------------- | ------------- | ------
 최대 대상 단말수  | 1,000,000  | 2,000
-평균 데이터 전송속도  | 0.08초  | 0.09초
+평균 데이터 전송속도  | 0.08초  | 009초
 1회성/단발성 통신 | X | 권고
 1회성이 아닌 모든 통신| 권고 | X
 
@@ -453,7 +453,7 @@ serverMgr.sendMulticastCustomPush(data, regIDs);
 
 ```java
 public void onSendMulticastCustomPushResult(int resultCode, String resultMsg, String msgId, String requestId) {
-    output("onSendMulticastMsgResult:" + resultCode + "msg = " + msgId);
+    output("onSendMulticastMsgResult:" + resultCode + "msgId = " + msgId);
 
     if(resultCode == Result.RESULT_OK) {
        // multicast message has sent successfully
@@ -481,8 +481,8 @@ serverMgr.sendBroadcastCustomPush(data);
 메시지 발신 결과는 MessageListener 인터페이스의 onSendBroadcastMsgResult()를 통해 알 수 있다.
 
 ```java
-public void onSendBroadcastCustomPushResult(int resultCode, String resultMsg, String requestId) {
-    output("onSendBroadcastCustomPushResult:" + resultCode + "msg = " + msgId);
+public void onSendBroadcastCustomPushResultonSendBroadcastCustomPushResult(int resultCode, String resultMsg, String msgId, String requestId) {
+    output("onSendBroadcastCustomPushResult:" + resultCode + "msgId = " + msgId);
     
     if(resultCode == Result.RESULT_OK) {
        // broadcast message has sent successfully
@@ -512,8 +512,8 @@ serverMgr.sendGroupCustomPush(data, grpId);
 메시지 발신 결과는 MessageListener 인터페이스의 onSendGroupCustomPushResult()를 통해 알 수 있다.
 
 ```java
-public void onSendGroupCustomPushResult(int resultCode, String resultMsg, String requestId) {
-    output("onSendGroupCustomPushResult:" + resultCode + "msg = " + msgId);
+public void onSendGroupCustomPushResult(int resultCode, String resultMsg, String msgId, String requestId) {
+    output("onSendGroupCustomPushResult:" + resultCode + "msgId = " + msgId);
     
     if(resultCode == Result.RESULT_OK) {
        // group message has sent successfully
@@ -536,15 +536,23 @@ serverMgr.retryCustomPush(msgId, 1);
 ```
 
 
+>## 메시지 트래킹
 
-## 메시지 전달 트래킹(메시지 통계 정보)
+
+>메시지 트래킹은 발신한 메시지의 실시간 전달상태를 알려준다.  
+메시지 트래킹 API의 호출을 통해 결과를 API콜백에서 확인한다.
+
+
+
+
+## 메시지 트래킹(메시지 통계 정보)
 
   한번에 다수의 메시지 전달통계를 실시간 확인한다. 
   - 커스텀푸시 및 실시간 메시지 모두 지원한다.
   - 한번에 최대 100개 메시지 아이디 지정
   - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.   
   
-### 메시지 전달 트래킹(메시지 통계 정보) API
+### 메시지 트래킹(메시지 통계 정보) API
  
 
 ```java
@@ -559,7 +567,7 @@ serverMgr.msgStatsTracking(msgIds);
 output("msg stats tracking request msgId list :" + msgIds);
 ```
 
-### 메시지 전달 트래킹(메시지 통계 정보) API 결과
+### 메시지 트래킹(메시지 통계 정보) API 결과
 메시지 발신 결과는 MsgTrackingListener 인터페이스의 onMsgStatsTrackingResult()를 통해 알 수 있다.
 
 ```java
@@ -574,7 +582,7 @@ class SimpleTrackingListener implements MsgTrackingListener {
 
 
 
-## 메시지 전달 트래킹(메시지 상태별 단말앱 목록)
+## 메시지 상태 트래킹(메시지 상태별 단말앱 목록)
 
   하나의 커스텀푸시 메시지 상태별 단말앱 목록을 실시간 트래킹한다.
  - 알림 미전달 단말앱 목록만 트래킹하여 알림 미전달 단말앱 대상 유료 메시지 발신시 유용하다.   
@@ -582,7 +590,7 @@ class SimpleTrackingListener implements MsgTrackingListener {
  - 100만 단말앱에 동시에 커스텀 푸시 발신시에도 1분대에 전체 발신 및 전달 및 수신확인 여부 실시간 트래킹이 가능하다.
  - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.   
   
-### 메시지 전달 트래킹(메시지 상태별 단말앱 목록) API
+### 메시지 상태 트래킹(메시지 상태별 단말앱 목록) API
  
 
 ```java
@@ -590,7 +598,7 @@ AppServerManager serverMgr = AppServerManager.getInstance();
 serverMgr.msgDevicesTracking(msgId, msgState, deviceType, startIdx, fetchSize);
 ```
 
-### 메시지 전달 트래킹(메시지 상태별 단말앱 목록) API 결과
+### 메시지 상태 트래킹(메시지 상태별 단말앱 목록) API 결과
 메시지 발신 결과는 MsgTrackingListener 인터페이스의 onMsgDevicesTrackingResult()를 통해 알 수 있다.
 
 ```java
@@ -605,13 +613,13 @@ class SimpleTrackingListener implements MsgTrackingListener {
 ```
 
 
-## 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보)
+## 메시지 상태 트래킹(메시지 상태별 단말앱 상세정보)
 
   하나의 커스텀푸시 메시지 상태별 단말앱 상세정보를 실시간 트래킹한다.
    - 멀티캐스트, 그룹메시지, 브로드캐스트로 동시에 1000단말앱이상 발신한 메시지의 트래킹에 효과적이다.
    - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.   
   
-### 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보) API
+### 메시지 상태 트래킹(메시지 상태별 단말앱 상세정보) API
  
 
 ```java
@@ -619,7 +627,7 @@ AppServerManager serverMgr = AppServerManager.getInstance();
 serverMgr.msgDeviceDetailTracking(msgId, msgState, deviceType, startIdx, fetchSize);
 ```
 
-### 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보) API 결과
+### 메시지 상태 트래킹(메시지 상태별 단말앱 상세정보) API 결과
 메시지 발신 결과는 MsgTrackingListener 인터페이스의 onMsgDeviceDetailTrackingResult()를 통해 알 수 있다.
 
 ```java
@@ -635,7 +643,7 @@ class SimpleTrackingListener implements MsgTrackingListener {
 ```
 
 
-## 배치 메시지 전달 트래킹(메시지 상태별 단말앱 목록)
+## 배치 메시지 트래킹(메시지 상태별 단말앱 목록)
 
   한번에 다수의 메시지를 트래킹시 사용한다.
    - 커스텀푸시 메시지 상태별 단말앱 목록을 실시간 트래킹한다.
@@ -645,7 +653,7 @@ class SimpleTrackingListener implements MsgTrackingListener {
    - 알림 미전달 단말앱 목록만 트래킹하여 알림 미전달 단말앱 대상 유료 메시지 발신시 유용하다.
    - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.     
   
-### 배치 메시지 전달 트래킹(메시지 상태별 단말앱 목록) API
+### 배치 메시지 트래킹(메시지 상태별 단말앱 목록) API
  
 
 ```java
@@ -653,7 +661,7 @@ AppServerManager serverMgr = AppServerManager.getInstance();
 serverMgr.batchMsgDevicesTracking(msgIds, msgStateFlag);
 ```
 
-### 배치 메시지 전달 트래킹(메시지 상태별 단말앱 목록) API 결과
+### 배치 메시지 트래킹(메시지 상태별 단말앱 목록) API 결과
 메시지 발신 결과는 MsgTrackingListener 인터페이스의 onBatchMsgDeviceDetailTrackingResult()를 통해 알 수 있다.
 
 ```java
@@ -667,7 +675,7 @@ class SimpleTrackingListener implements MsgTrackingListener {
 }
 ```
 
-## 배치 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보)
+## 배치 메시지 트래킹(메시지 상태별 단말앱 상세정보)
 
  한번에 다수의 메시지를 트래킹시 사용한다.
    - 커스텀푸시 메시지 상태별 단말앱 상세정보를 실시간 트래킹한다.
@@ -676,7 +684,7 @@ class SimpleTrackingListener implements MsgTrackingListener {
    - 전체 메시지의 대상 단말앱 수가 1000미만이어야 한다.
    - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.
   
-### 배치 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보) API
+### 배치 메시지 트래킹(메시지 상태별 단말앱 상세정보) API
  
 
 ```java
@@ -684,7 +692,7 @@ AppServerManager serverMgr = AppServerManager.getInstance();
 serverMgr.batchMsgDeviceDetailTracking(msgIds, msgStateFlag);
 ```
 
-### 배치 메시지 전달 트래킹(메시지 상태별 단말앱 상세정보) API 결과
+### 배치 메시지 트래킹(메시지 상태별 단말앱 상세정보) API 결과
 메시지 발신 결과는 MsgTrackingListener 인터페이스의 onBatchMsgDeviceDetailTrackingResult()를 통해 알 수 있다.
 
 ```java
@@ -694,6 +702,155 @@ class SimpleTrackingListener implements MsgTrackingListener {
     public void onBatchMsgDeviceDetailTrackingResult(int resultCode, String resultMsg, ArrayList<Map<String, Object>> msgs, String requestId) {
         // TODO Auto-generated method stub
         output("onBatchMsgDeviceDetailTrackingResult:" + resultCode + "msg = " + resultMsg  + "msgs = " + msgs );
+    }
+}
+```
+
+
+>## 메시지 트래킹 자동콜백 
+
+
+>메시지 트래킹 API를 호출하면 결과 콜백에서 메시지 전달 상태를 알려준다. 즉, 메시지 전달 상태를 알기 위해서는 매번 메시지 트래킹 API를 호출해야 한다. 메시지 트래킹 자동콜백 설정을 하면 일일히 트래킹 API를 호출하지 않아도 메시지 전달 현황을 실시간 콜백으로 알려준다.
+
+
+### 메시지 트래킹 자동콜백 제한사항
+
+- 메시지 트래킹 API는 REST API도 지원하는데 반해 메시지 트래킹 자동콜백은 앱서버 라이브러리에서만 제공한다.
+- 메시지 트래킹 API는 실시간 메시지와 커스텀 푸시 모두 지원하는데 반해 메시지 트래킹 자동콜백은 커스텀 푸시만 지원한다.
+
+### 메시지 트래킹 자동콜백 모드 활성화
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+serverMgr.setAutoMsgTracking(true);
+```
+
+- setAutoMsgTracking(true) 를 호출하면 메시지 트래킹 자동콜백 모드가 활성화된다.
+- setAutoMsgTracking(false)) 를 호출하면 메시지 트래킹 자동콜백 모드가 비활성화된다.
+
+### 메시지 트래킹 자동콜백 설정
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+serverMgr.setAutoMsgTrackingListener(new SimpleAutoMsgTrackingListener());
+```
+
+- setAutoMsgTrackingListener()로 메시지 트래킹 자동콜백 지정
+- 이후 커스텀푸시 발신후 메시지 전달 상태가 변경시 onAutoMsgTracked() 콜백으로 자동 호출된다.
+- onAutoMsgTracked(ArrayList<Map<String, Object>> msgs) 콜백의 msgs는 json 포맷의 메시지 상태 변경 목록이 담겨있다.
+- 하나의 메시지 상태 포맷은 {"mId":"message id 1", "dIds":[{"dId":"deviceId1", "ps":11, "s":2}]} 포맷이다.
+- 하나의 메시지 상태 포맷의 "mId"는 메시지 아이디로 푸시 발신후 발신 결과 콜백에서 전달받은 메시지 아이디이다.
+- 하나의 메시지 상태 포맷의 "dIds"는 메시지 발신 대상 단말 중 메시지 상태가 변경된 단말들의 메시지 상태 목록이다.
+- 하나의 메시지 상태 포맷의 상세설명은 아래 소스상의 코맨트를 참조하기 바란다.
+
+
+```java
+
+class SimpleAutoMsgTrackingListener implements AutoMsgTrackingListener {
+
+    
+    /**
+     * 퍼블릭 푸시 서버로부터 상태정보("ps")를 받거나 래셔널아울 서버가 메시지 상태 변경을 감지한 메시지 목록을 알려준다.
+     * 
+     * @param msgs
+     *            발신한 메시지의 대상 단말별 메시지 상태 변화가 생긴 목록들을 배열형태로 전달 받는다. 배열에는 다수의 메시지 전달 상태들이 Map(Json) 포맷으로 되어 있다. 
+     *            하나의 메시지 Json 포맷 형태는 아래와 같다.
+     *            // message id: 발신한 메시지의 메시지 아이디
+     *            {"mId":"message id 1",                    
+     *             // device Ids: 대상 단말별 전달 현황 목록 
+     *             "dIds": [                            
+     *                       // 퍼블릭 푸시 서버 accept 한 경우
+     *                       {
+     *                         "dId":"device id 2",
+     *                         "ps": 11  
+     *                       },
+     *                       // 퍼블릭 푸시 Token invalid
+     *                       {
+     *                         "dId":"device id 2",
+     *                         "ps": 13  
+     *                       },
+     *                       // 퍼블릭 푸시 Token 존재하지 않을 경우
+     *                       {
+     *                         "dId":"device id 2",
+     *                         "ps": 14
+     *                       },
+     *                       // 퍼블릭 푸시 서버와 통신에러 발생시
+     *                       {
+     *                         "dId":"device id 2",
+     *                         "ps": 19
+     *                       },
+     *                       // 퍼블릭 푸시 서버 accept, 푸시알림 단말 전달 및 사용자 수신확인 한 경우     
+     *                       {
+     *                         "dId":"device id 1",       // device id: 대상 단말 아이디 
+     *                         "s": 2,                    // state: 메시지 전달 상태가 다음 4가지 로 변경된 경우 (2: 사용자 수신확인, 4: 푸시알림 단말에 전달됨, 5: 단말앱 삭제된 상태)
+     *                         "nt":111111111,            // notification delivery time: 푸시 알림 전달 시간으로 밀리세컨드 단위( 1970년 1월1일 0시 이후 경과시간) state가 2, 4일 경우 세팅됨
+     *                         "dt":222222222             // msg delivery time: 사용자 수신확인 시간으로 밀리세컨드 단위( 1970년 1월1일 0시 이후 경과시간) state가 2일 경우 세팅됨             
+     *                         "ps": 11                   // public push state: 퍼블릭 푸시 서버로부터 전달받은 상태  (11: 퍼블릭푸시서버 accept, 12: token not register, 13: invalid token, 19: 퍼블릭푸시서버 통신 에러
+     *                       }
+     *                     ]
+     *            }    
+     */
+    @Override
+    public void onAutoMsgTracked(ArrayList<Map<String, Object>> msgs) {
+        
+        for(Map<String, Object> msg: msgs) {
+            String msgId = (String)msg.get("mId");
+            ArrayList<Map<String, Object>> dIds = (ArrayList<Map<String, Object>>)msg.get("dIds");
+            
+            for(Map<String, Object> device: dIds) {
+                String deviceId = (String)device.get("dId");
+                
+                // check Public State by public push server
+                if(device.containsKey("ps")) {
+                    int publicPushState = (int)device.get("ps");
+                    
+                    switch(publicPushState) {
+                        case 11: // public push server accept
+                            // do your logic
+                            break;
+                        case 12: // token not register
+                            // do your logic
+                            break;
+                        case 13: // invalid token
+                            // do your logic
+                            break;
+                        case 19: // public push server error
+                            // do your logic
+                            break;
+                        default:                            
+                            break;
+                    }
+                }
+                
+                // check state by RationalOwl server
+                if(device.containsKey("s")) {
+                    int state = (int)device.get("s");
+                    
+                    switch(state) {
+                        // user read push message
+                        case 2: 
+                            // user read time(milliseconds since 1/1/1970)
+                            // RationaOwl server deliver message data while app launching by clicking push notification or by clicking app icon
+                            long readTime = (long)device.get("dt"); // data delivery time                            
+                             
+                            if(device.containsKey("nt")) {
+                                long notiDeliverTime = (long)device.get("nt");
+                            }                            
+                            break;
+                        // push deliver to the device successfully
+                        case 4: 
+                            long notiDeliverTime = (long)device.get("nt");
+                            break;
+                        // user remove app
+                        case 5: 
+                            // app removed, do your logic here                            
+                            break;
+                        default:                            
+                            break;
+                    }
+                }
+            }            
+        }
     }
 }
 ```
