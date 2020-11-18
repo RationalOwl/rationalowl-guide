@@ -574,6 +574,37 @@ output("msg stats tracking request msgId list :" + msgIds);
 class SimpleTrackingListener implements MsgTrackingListener {
 
     @Override
+    /**
+     * AppServerManager의  msgStatsTracking()API 호출결과 콜백이다.
+     * 
+     * @param resultCode
+     *            Result클래스에 정의된 결과값 상수
+     * @param resultMsg
+     *            resultCode의 값에 대한 의미
+     * @param msgStats
+     *            메시지 전달 현황 통계 map의 배열
+     *            [
+     *              { 
+     *                "mId":"msgid1",   // msgId(메시지 아이디)
+     *                "t":1200,         // total(메시지 발신 대상 총 단말앱 수)
+     *                "q":100,          // 미전달 큐잉 단말앱 수
+     *                "n":900,          // notiDeliver (알림 전달 받은 단말앱 수)
+     *                "d":200,          // deliver 사용자 수신 확인(데이터 전달) 단말앱 수
+     *                "e":0             // expire 미전달 기간 만료된 대상 단말앱 수 
+     *              }, 
+     *              { 
+     *                "mId":"msgid2",   
+     *                "t":1200,         
+     *                "q":100,          
+     *                "n":900,          
+     *                "d":200,          
+     *                "e":0              
+     *              },
+     *              ...
+     *            ]
+     * @param requestId
+     *            본 콜백 결과를 야기한 createDeviceGroup() API 반환값
+     */
     public void onMsgStatsTrackingResult(int resultCode, String resultMsg, ArrayList<Map<String, Object>> msgStats, String requestId) {
         output("onMsgStatsTrackingResult:" + resultCode + "msg = " + resultMsg  + "msgStats = " + msgStats );
     }
@@ -592,6 +623,30 @@ class SimpleTrackingListener implements MsgTrackingListener {
   
 ### 메시지 상태 트래킹(메시지 상태별 단말앱 목록) API
  
+```java
+    /**
+     * 메시지 상태별 단말앱 목록을 실시간 확인한다. 가장 일반적인 사용예는 알림 미전달 대상 단말앱 목록에 유료 메시지 발신하고자 할
+     * 경우이다.
+     * 
+     * @param msgId
+     *            트래킹하고자 하는 메시지 아이디
+     * @param msgStateFlag
+     *            : 아래 값들의 bit or 값 0: all 1: 큐잉된 단말앱 목록을 fetch한다. 2: 수신확인한 단말앱
+     *            목록을 fetch한다. 4: 메시지 미전달 기한만료된 단말앱 목록을 fetch한다. 8: 알림전달한 단말앱
+     *            목록을 fetch한다.
+     * @param deviceTypeFlag
+     *            : 아래 값들의 bit or 값 0: all 1: 안드로이드 단말앱 목록을 fetch한다. 2: IOS 단말앱
+     *            목록을 fetch한다.
+     * @param startIndex
+     *            전체 단말앱 중 fetch 시작 index
+     * @param fetchSize
+     *            전체 단말앱 목록 startIndex부터 fetch할 단말앱 목록 수
+     * @return request id
+     */
+    public String msgDevicesTracking(String msgId, int msgStateFlag, int deviceTypeFlag, int startIndex, int fetchSize)
+```
+
+API 호출 예
 
 ```java
 AppServerManager serverMgr = AppServerManager.getInstance(); 
@@ -605,6 +660,27 @@ serverMgr.msgDevicesTracking(msgId, msgState, deviceType, startIdx, fetchSize);
 class SimpleTrackingListener implements MsgTrackingListener {
 
     @Override
+    /**
+     * AppServerManager의 msgDetailTracking()API 호출결과 콜백이다.
+     * 
+     * @param resultCode
+     *            Result클래스에 정의된 결과값 상수
+     * @param resultMsg
+     *            resultCode의 값에 대한 의미
+     * @param msgId
+     *            상세 메시지 전달 내역 대상 메시지 아이디
+     * @param startIndex
+     *            메시지 전달 대상 전체 단말앱 중 fetch 한 첫 번째 인덱스
+     * @param totalDeviceSize
+     *            메시지 전달 대상 전체 단말앱
+     * @param fetchDeviceSize
+     *            totalDeviceSize 중 startIndex부터 fetchDeviceSize 만큼의 단말앱 정보를 msgDetail에 fetch 해 온다.
+     * @param deviceList
+     *            fetch 해 온 메시지 전달 대상 단말 등록 아이디 목록            
+     *                      
+     * @param requestId
+     *            본 콜백 결과를 야기한 addDeviceGroup() API 반환값
+     */
     public void onMsgDevicesTrackingResult(int resultCode, String resultMsg, String msgId, int startIndex, int totalDeviceSize, int fetchDeviceSize, ArrayList<String> deviceList, String requestId) {
         output("onSendGroupCustomPushResult:" + resultCode + "msg = " + resultMsg + " msgId =" + msgId + " startIndex=" + startIndex + " totalDeviceSize=" + totalDeviceSize 
                 + " fetchDeviceSize = " + fetchDeviceSize + " deviceList = " + deviceList);
@@ -621,6 +697,29 @@ class SimpleTrackingListener implements MsgTrackingListener {
   
 ### 메시지 상태 트래킹(메시지 상태별 단말앱 상세정보) API
  
+ ```java
+    /**
+     * 메시지 상태별 단말앱 상세정보를 실시간 확인한다.
+     * 
+     * @param msgId
+     *            트래킹하고자 하는 메시지 아이디
+     * @param msgStateFlag
+     *            : 아래 값들의 bit or 값 0: all 1: 큐잉된 단말앱 목록을 fetch한다. 2: 수신확인한 단말앱
+     *            목록을 fetch한다. 4: 메시지 미전달 기한만료된 단말앱 목록을 fetch한다. 8: 알림전달한 단말앱
+     *            목록을 fetch한다.
+     * @param deviceTypeFlag
+     *            : 아래 값들의 bit or 값 0: all 1: 안드로이드 단말앱 목록을 fetch한다. 2: IOS 단말앱
+     *            목록을 fetch한다.
+     * @param startIndex
+     *            전체 단말앱 중 fetch 시작 index
+     * @param fetchSize
+     *            전체 단말앱 목록 startIndex부터 fetch할 단말앱 목록 수
+     * @return request id
+     */
+    public String msgDeviceDetailTracking(String msgId, int msgStateFlag, int deviceTypeFlag, int startIndex, int fetchSize)
+```
+
+API 호출 예
 
 ```java
 AppServerManager serverMgr = AppServerManager.getInstance(); 
@@ -634,6 +733,38 @@ serverMgr.msgDeviceDetailTracking(msgId, msgState, deviceType, startIdx, fetchSi
 class SimpleTrackingListener implements MsgTrackingListener {
 
     @Override
+    /**
+     * AppServerManager의 msgDetailTracking()API 호출결과 콜백이다.
+     * 
+     * @param resultCode
+     *            Result클래스에 정의된 결과값 상수
+     * @param resultMsg
+     *            resultCode의 값에 대한 의미
+     * @param msgId
+     *            상세 메시지 전달 내역 대상 메시지 아이디
+     * @param startIndex
+     *            메시지 전달 대상 전체 단말앱 중 fetch 한 첫 번째 인덱스
+     * @param totalDeviceSize
+     *            메시지 전달 대상 전체 단말앱
+     * @param fetchDeviceSize
+     *            totalDeviceSize 중 startIndex부터 fetchDeviceSize 만큼의 단말앱 정보를 msgDetail에 fetch 해 온다.
+     * @param msgDetail
+     *            fetch 해 온 메시지 전달 대상 단말 정보 목록
+     *            메시지 전달 대상 단말 map 의 배열 
+     *            [
+     *              {
+     *                "drId":"12122123",           // deviceRegId 단말 등록 아이디
+     *                "drn": "john's i phone",     // deviceRegName 단말 등록 이름
+     *                "os": 2,                     // 단말 OS (1: android, 2: ios)
+     *                "ms":1,                      // msgState 단말의 메시지 전달 상태 (1: 미전달 큐잉, 2: 수신확인(데이터 전달), 4(미전달 기간만료), 8(알림 전달)
+     *                "dt":11111,                  // deliverTime(메시지 수신확인 시간: 밀리세컨드 단위): optional field로 msgState가 2인 경우 세팅된다.                                 
+     *                "nt":22222                   // notification delivery time(알림 전달 시간: 밀리세컨드 단위) optional field로  msgState가 8인 경우 세팅된다.
+     *              }
+     *            ]
+     *                      
+     * @param requestId
+     *            본 콜백 결과를 야기한 addDeviceGroup() API 반환값
+     */
     public void onMsgDeviceDetailTrackingResult(int resultCode, String resultMsg, String msgId, int startIndex, int totalDeviceSize, int fetchDeviceSize, ArrayList<Map<String, Object>> msgDetail, String requestId) {
         // TODO Auto-generated method stub
         output("onSendGroupCustomPushResult:" + resultCode + "msg = " + resultMsg + " msgId =" + msgId + " startIndex=" + startIndex + " totalDeviceSize=" + totalDeviceSize 
@@ -655,7 +786,28 @@ class SimpleTrackingListener implements MsgTrackingListener {
   
 ### 배치 메시지 트래킹(메시지 상태별 단말앱 목록) API
  
+```java
+    /**
+     * 다수의 메시지 상태별 단말앱 목록을 실시간 확인한다. 대상 단말이 1~2대인 개인화된 메시지의 트래킹 정보를 고속으로 처리하고자
+     * 할때 사용한다. 전체 메시지의 대상 단말앱 수가 1000개를 넘어서는 안된다. 대상 단말앱수가 과다할 경우 배치 API 대신 일반
+     * msgDevicesTracking API를 이용해야 한다. 가장 일반적인 사용예는 알림 미전달 대상 단말앱 목록에 유료 메시지
+     * 발신하고자 할 경우이다.
+     * 
+     * 
+     * @param msgIds
+     *            메시지 상태별 단말아이디 목록을 알고자 하는 메시지 아이디 목록 메시지 아이디 목록은 최대 100개까지
+     *            지원한다.
+     * 
+     * @param msgStateFlag
+     *            : 아래 값들의 bit or 값 0: all 1: 큐잉된 단말앱 목록을 fetch한다. 2: 수신확인한 단말앱
+     *            목록을 fetch한다. 4: 메시지 미전달 기한만료된 단말앱 목록을 fetch한다. 8: 알림전달한 단말앱
+     *            목록을 fetch한다.
+     * @return request id
+     */
+    public String batchMsgDevicesTracking(ArrayList<String> msgIds, int msgStateFlag)
+```
 
+API 호출 예
 ```java
 AppServerManager serverMgr = AppServerManager.getInstance();   
 serverMgr.batchMsgDevicesTracking(msgIds, msgStateFlag);
@@ -668,9 +820,32 @@ serverMgr.batchMsgDevicesTracking(msgIds, msgStateFlag);
 class SimpleTrackingListener implements MsgTrackingListener {
 
     @Override
-    public void onBatchMsgDeviceDetailTrackingResult(int resultCode, String resultMsg, ArrayList<Map<String, Object>> msgs, String requestId) {
+    /**
+     * AppServerManager의 batchMsgDevicesTracking()API 호출결과 콜백이다.
+     * 
+     * @param resultCode
+     *            Result클래스에 정의된 결과값 상수
+     * @param resultMsg
+     *            resultCode의 값에 대한 의미
+     * @param msgs
+     *            메시지 Id와 단말등록아이디 배열
+     *            [
+     *              { 
+     *                "mId":"msgid1",   // msgId(메시지 아이디)
+     *                "dl":["111111","2222222"]     // deviceId list 
+     *              },
+     *              ....
+     *              { 
+     *                "mId":"msgid100",
+     *                "dl":["111111","2222222"] 
+     *              }
+     *            ]
+     * @param requestId
+     *            본 콜백 결과를 야기한 createDeviceGroup() API 반환값
+     */
+    public void onBatchMsgDevicesTrackingResult(int resultCode, String resultMsg, ArrayList<Map<String, Object>> msgs, String requestId) {
         // TODO Auto-generated method stub
-        output("onBatchMsgDeviceDetailTrackingResult:" + resultCode + "msg = " + resultMsg  + "msgs = " + msgs );
+        output("onBatchMsgDevicesTrackingResult:" + resultCode + "msg = " + resultMsg  + "msgs = " + msgs );
     }
 }
 ```
@@ -685,7 +860,27 @@ class SimpleTrackingListener implements MsgTrackingListener {
    - 메시지 큐잉기간(기본 3일)내 발신한 메시지에 대한 트래킹 지원.
   
 ### 배치 메시지 트래킹(메시지 상태별 단말앱 상세정보) API
- 
+ ```java
+    /**
+     * 다수의 메시지 상태별 단말앱 상세 정보를 실시간 확인한다. 대상 단말이 1~2대인 개인화된 메시지의 트래킹 정보를 고속으로
+     * 처리하고자 할때 사용한다. 전체 메시지의 대상 단말앱 수가 1000개를 넘어서는 안된다. 대상 단말앱수가 과다할 경우 배치 API
+     * 대신 일반 msgDeviceDetailTracking API를 이용해야 한다.
+     * 
+     * 
+     * @param msgIds
+     *            메시지 상태별 단말아이디 목록을 알고자 하는 메시지 아이디 목록 메시지 아이디 목록은 최대 100개까지
+     *            지원한다.
+     * 
+     * @param msgStateFlag
+     *            : 아래 값들의 bit or 값 0: all 1: 큐잉된 단말앱 목록을 fetch한다. 2: 수신확인한 단말앱
+     *            목록을 fetch한다. 4: 메시지 미전달 기한만료된 단말앱 목록을 fetch한다. 8: 알림전달한 단말앱
+     *            목록을 fetch한다.
+     * @return request id
+     */
+    public String batchMsgDeviceDetailTracking(ArrayList<String> msgIds, int msgStateFlag)
+```
+
+API 호출 예
 
 ```java
 AppServerManager serverMgr = AppServerManager.getInstance();   
@@ -699,6 +894,39 @@ serverMgr.batchMsgDeviceDetailTracking(msgIds, msgStateFlag);
 class SimpleTrackingListener implements MsgTrackingListener {
 
     @Override
+    /**
+     * AppServerManager의  batchMsgDeviceDetailTracking()API 호출결과 콜백이다.
+     * 
+     * @param resultCode
+     *            Result클래스에 정의된 결과값 상수
+     * @param resultMsg
+     *            resultCode의 값에 대한 의미
+     * @param msgs
+     *            메시지 Id와 단말정보 배열
+     *            [
+     *              { 
+     *                "mId":"msgid1",   // msgId(메시지 아이디)
+     *                "dl":[            // device list : 단말 상세 정보 목록
+     *                   {
+     *                     "drId":"12122123",           // deviceRegId 단말 등록 아이디
+     *                     "drn": "john's i phone",     // deviceRegName 단말 등록 이름
+     *                     "os": 2,                     // 단말 OS (1: android, 2: ios)
+     *                     "ms":1,                      // msgState 단말의 메시지 전달 상태 (1: 미전달 큐잉, 2: 수신확인(데이터 전달), 4(미전달 기간만료), 8(알림 전달)
+     *                     "dt":11111,                  // deliverTime(메시지 수신확인 시간: 밀리세컨드 단위): optional field로 msgState가 2인 경우 세팅된다.                                 
+     *                     "nt":22222                   // notification delivery time(알림 전달 시간: 밀리세컨드 단위) optional field로  msgState가 8인 경우 세팅된다.
+     *                    },
+     *                    ....
+     *                 ]      
+     *              },
+     *              ....
+     *              { 
+     *                "mId":"msgid100",
+     *                "dl":[...] 
+     *              }
+     *            ]
+     * @param requestId
+     *            본 콜백 결과를 야기한 createDeviceGroup() API 반환값
+     */
     public void onBatchMsgDeviceDetailTrackingResult(int resultCode, String resultMsg, ArrayList<Map<String, Object>> msgs, String requestId) {
         // TODO Auto-generated method stub
         output("onBatchMsgDeviceDetailTrackingResult:" + resultCode + "msg = " + resultMsg  + "msgs = " + msgs );
@@ -713,10 +941,12 @@ class SimpleTrackingListener implements MsgTrackingListener {
 >메시지 트래킹 API를 호출하면 결과 콜백에서 메시지 전달 상태를 알려준다. 즉, 메시지 전달 상태를 알기 위해서는 매번 메시지 트래킹 API를 호출해야 한다. 메시지 트래킹 자동콜백 설정을 하면 일일히 트래킹 API를 호출하지 않아도 메시지 전달 현황을 실시간 콜백으로 알려준다.
 
 
-### 메시지 트래킹 자동콜백 제한사항
+### 메시지 트래킹 자동콜백 유의사항
 
 - 메시지 트래킹 API는 REST API도 지원하는데 반해 메시지 트래킹 자동콜백은 앱서버 라이브러리에서만 제공한다.
 - 메시지 트래킹 API는 실시간 메시지와 커스텀 푸시 모두 지원하는데 반해 메시지 트래킹 자동콜백은 커스텀 푸시만 지원한다.
+- 메시지 트래킹 API는 퍼블릭푸시 서버에서 응답하는 상태값을 제공하지 않는데 반해 메시지 트래킹 자동콜백은 제공한다.
+- 메시지 트래킹 API는 단말앱이 삭제된 단말 대상 발신한 메시지에 대해서는 빈 데이터를 제공하는데 반해 메시지 트래킹 자동콜백은 앱삭제 상태값을 별도로 제공한다.
 
 ### 메시지 트래킹 자동콜백 모드 활성화
 
@@ -741,6 +971,8 @@ serverMgr.setAutoMsgTrackingListener(new SimpleAutoMsgTrackingListener());
 - 하나의 메시지 상태 포맷은 {"mId":"message id 1", "dIds":[{"dId":"deviceId1", "ps":11, "s":2}]} 포맷이다.
 - 하나의 메시지 상태 포맷의 "mId"는 메시지 아이디로 푸시 발신후 발신 결과 콜백에서 전달받은 메시지 아이디이다.
 - 하나의 메시지 상태 포맷의 "dIds"는 메시지 발신 대상 단말 중 메시지 상태가 변경된 단말들의 메시지 상태 목록이다.
+- "s"는 래셔널아울에서 트래킹한 메시지 전달상태
+- "ps"는 퍼블릭 푸시 서버로부터 전달받은 상태
 - 하나의 메시지 상태 포맷의 상세설명은 아래 소스상의 코맨트를 참조하기 바란다.
 
 
@@ -782,7 +1014,7 @@ class SimpleAutoMsgTrackingListener implements AutoMsgTrackingListener {
      *                       // 퍼블릭 푸시 서버 accept, 푸시알림 단말 전달 및 사용자 수신확인 한 경우     
      *                       {
      *                         "dId":"device id 1",       // device id: 대상 단말 아이디 
-     *                         "s": 2,                    // state: 메시지 전달 상태가 다음 4가지 로 변경된 경우 (2: 사용자 수신확인, 4: 푸시알림 단말에 전달됨, 5: 단말앱 삭제된 상태)
+     *                         "s": 2,                    // state: 메시지 전달 상태가 다음 3가지로 전이된 경우 (2: 사용자 수신확인, 4: 푸시알림 단말에 전달됨, 5: 단말앱 삭제된 상태)
      *                         "nt":111111111,            // notification delivery time: 푸시 알림 전달 시간으로 밀리세컨드 단위( 1970년 1월1일 0시 이후 경과시간) state가 2, 4일 경우 세팅됨
      *                         "dt":222222222             // msg delivery time: 사용자 수신확인 시간으로 밀리세컨드 단위( 1970년 1월1일 0시 이후 경과시간) state가 2일 경우 세팅됨             
      *                         "ps": 11                   // public push state: 퍼블릭 푸시 서버로부터 전달받은 상태  (11: 퍼블릭푸시서버 accept, 12: token not register, 13: invalid token, 19: 퍼블릭푸시서버 통신 에러
