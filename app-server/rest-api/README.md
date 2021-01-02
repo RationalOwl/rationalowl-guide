@@ -750,6 +750,7 @@ data format
   "serviceId":"service id here",
   "serverRegId":"server registration id here",
   "deviceRegIds":[“regId1“,”regId2”,….,”regIdN],
+  "silent":0,
   "data":{
      // your custom field & data
      // add whatever fields you want.
@@ -776,6 +777,9 @@ data format
     앱 서버로 전달해 줘야 한다.
   - 앱 서버는 전달 받은 단말 등록 아이디를 저장/관리해야 한다.
   - 최대 2000대까지 제한
+- silent
+  - 0: 일반 커스텀푸시
+  - 1: 사일런트 커스텀푸시
 - data
   - 사용자 지정 데이터 필드 및 값
   - 앱 성격에 맞게 임의의 필드 추가 가능
@@ -823,6 +827,7 @@ data format
    //mandantory fields
   "serviceId":"service id here",
   "serverRegId":"server registration id here",
+  "silent":0,
   "data":{
      // your custom field & data
      // add whatever fields you want.
@@ -843,6 +848,9 @@ data format
   - 래셔널아울 콘솔에 등록한 서비스 구분자
 - serverRegId
   - 등록 시 발급받은 앱 서버 등록 아이디
+- silent
+  - 0: 일반 커스텀푸시
+  - 1: 사일런트 커스텀푸시
 - data
   - 사용자 지정 데이터 필드 및 값
   - 앱 성격에 맞게 임의의 필드 추가 가능
@@ -891,6 +899,7 @@ data format
   "serviceId":"service id here",
   "serverRegId":"server registration id here",
   "groupId":"group id here",
+  "silent":0,
   "data":{
      // your custom field & data
      // add whatever fields you want.
@@ -913,6 +922,9 @@ data format
   - 등록 시 발급받은 앱 서버 등록 아이디
 - groupId
   - 커스텀 푸시를 전달할 대상 단말그룹의 아이디
+- silent
+  - 0: 일반 커스텀푸시
+  - 1: 사일런트 커스텀푸시  
 - data
   - 사용자 지정 데이터 필드 및 값
   - 앱 성격에 맞게 임의의 필드 추가 가능
@@ -1434,3 +1446,62 @@ data format
 - error
   - REST API 실패 시 반환
   - 실패 원인 메시지
+
+
+
+>## 단말앱 동기화
+
+단말앱이 단말앱 등록 API 호출결과 발급받은 단말앱 아이디와 단말앱 등록해제 API결과 해당 사실을 앱서버에 전달해야 하며 앱서버는 항상 유효한 단말앱 아이디 목록을 관리해야 한다.
+
+앱서버는 사용자가 앱 삭제시에도 삭제한 단말앱에 대한 동기화를 해야 한다.
+
+앱서버가 삭제한 단말앱을 동기화하는 방법은 두 가지이다.
+
+- 래셔널아울 웹 관리자 콘솔에서 시스템 푸시 허용을 설정시 래셔널아울 서비스 차원에서 자동 동기화하는 방법
+- 래셔널아울 시스템 푸시를 이용하지 않고 앱서버가 주기적으로 모든 단말앱에 사일런트 커스텀푸시를 발신하여 삭제한 단말앱 아이디 목록을 파악 후 삭제한 단말앱을 단말앱등록해제 API를 통해 직접 해제하는 방법
+
+
+## 단말앱 등록 해제 
+앱서버가 주기적으로 사일런트 커스텀푸시를 발신 후 단말앱 삭제 판단 기준일 이상 단말앱에 푸시알림이 전달되지 않고 단말앱이 판단 기준일 이상 실행된 적이 없을 경우 앱서버는 단말앱 등록 해제 API를 호출하여 래셔널아울 서비스에서 등록해제하도록 알려야 한다.
+
+ 
+통신 방식 : HTTP POST<br/>
+url :   http://221.221.22.11:8006(channelServer)/sync/deleteDevices/<br/>
+data format
+
+```java
+{
+  //mandatory fields
+  "serviceId":"service1",
+  "serverRegId":"server1",
+  "deviceIds":["1111111","2222222"]
+}
+```
+
+#### 필수 필드
+
+- serviceId: 래셔널아울 콘솔에 등록한 서비스 구분자
+- serverRegId: 트래킹 요청하는 서버 자신의 서버등록 아이디
+- deviceIds: 래셔널아울에서 등록해제할 단말앱 아이디 목록
+
+
+#### 선택 필드
+
+- NA
+
+###  결과
+
+```java
+{
+   //실패시 error 필드 세팅..
+}
+```
+
+#### 필수 필드
+- 단말앱 아이디 목록이 정상적으로 등록해제된 경우 필드 없음
+#### 선택 필드
+
+- error
+  - REST API 실패 시 반환
+  - 실패 원인 메시지
+

@@ -1086,3 +1086,63 @@ class SimpleAutoMsgTrackingListener implements AutoMsgTrackingListener {
     }
 }
 ```
+
+
+>## 단말앱 동기화
+
+단말앱이 단말앱 등록 API 호출결과 발급받은 단말앱 아이디와 단말앱 등록해제 API결과 해당 사실을 앱서버에 전달해야 하며 앱서버는 항상 유효한 단말앱 아이디 목록을 관리해야 한다.
+
+앱서버는 사용자가 앱 삭제시에도 삭제한 단말앱에 대한 동기화를 해야 한다.
+
+앱서버가 삭제한 단말앱을 동기화하는 방법은 두 가지이다.
+
+- 래셔널아울 웹 관리자 콘솔에서 시스템 푸시 허용을 설정시 래셔널아울 서비스 차원에서 자동 동기화하는 방법
+- 래셔널아울 시스템 푸시를 이용하지 않고 앱서버가 주기적으로 모든 단말앱에 사일런트 커스텀푸시를 발신하여 삭제한 단말앱 아이디 목록을 파악 후 삭제한 단말앱을 단말앱등록해제 API를 통해 직접 해제하는 방법
+
+
+## 단말앱 등록 해제 
+앱서버가 주기적으로 사일런트 커스텀푸시를 발신 후 단말앱 삭제 판단 기준일 이상 단말앱에 푸시알림이 전달되지 않고 단말앱이 판단 기준일 이상 실행된 적이 없을 경우 앱서버는 unregisterDevices API를 호출하여 래셔널아울 서비스에서 등록해제하도록 알려야 한다.
+
+  
+### 단말앱 등록 해제 API
+ 
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+ArrayList<String> devices = new ArrayList<String>();
+devices.add("app id 1");
+devices.add("app id 2");
+serverMgr.unregisterDevices(devices);
+```
+
+### 단말앱 등록 해제 결과 리스너 등록
+단말앱 등록 해제 결과를 처리할 리스너를 등록하면 이후 등록해제된 단말앱 아이디 목록을 콜백을 통해 알 수 있다. 
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+serverMgr.setDeviceSyncListener(new SimpleDeviceSyncListener());
+```
+
+### 단말앱 등록 해제 결과 콜백
+단말앱 등록 해제 API 호출후 그 결과는 결과를 처리할 리스너를 등록하면 이후 등록해제된 단말앱 아이디 목록을 콜백을 통해 알 수 있다. 
+
+```java
+class SimpleDeviceSyncListener implements DeviceSyncListener {
+
+    /**
+     * AppServerManager의 unregisterDevices()API 호출결과 호출된다.
+     * 
+     * @param resultCode
+     *            Result클래스에 정의된 결과값 상수
+     * @param resultMsg
+     *            resultCode의 값에 대한 의미
+     * @param unregDevices
+     *            unregisterDevices() API결과 등록해제된 단말 등록 아이디 목록  resultCode가   Result.RESULT_OK 시 세팅
+     * @param requestId
+     *            본 콜백 결과를 야기한 unregisterDevices() API 반환값
+     */
+    public void onDevicesUnregisterResult(int resultCode, String resultMsg, ArrayList<String> unregDevices, String requestId) {
+
+    }
+}
+```
