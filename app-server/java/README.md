@@ -1090,18 +1090,149 @@ class SimpleAutoMsgTrackingListener implements AutoMsgTrackingListener {
 
 >## 단말앱 동기화
 
-단말앱이 단말앱 등록 API 호출결과 발급받은 단말앱 아이디와 단말앱 등록해제 API결과 해당 사실을 앱서버에 전달해야 하며 앱서버는 항상 유효한 단말앱 아이디 목록을 관리해야 한다.
+앱서버는 등록한 단말앱 아이디을 관리해야 한다. 가장 기본적인 관리방법이 단말앱이 단말앱 등록 API와 단말앱 등록해제 API 호출 후 그 결과를 앱서버에 전달함으로써 앱서버가 유효한 단말앱 아이디를 동기화하는 것이다. 그러나 사용자가 단말앱 삭제를 하는 경우 앱서버는 삭제된 단말앱 아이디를 알기가 어렵다. 이를 해결하기 위해 래셔널아울은 두 가지 방법의 단말앱 동기화 방안을 제공한다.
 
-앱서버는 사용자가 앱 삭제시에도 삭제한 단말앱에 대한 동기화를 해야 한다.
+ 첫째, 자동 동기화 방식인데 래셔널아울 서비스 차원에서 삭제한 단말앱을 추적하여 단말앱 상태를 동기화하고 있다가 앱서버가 동기화 API 호출을 통해 동기화하는 방식이다. 이는 래셔널아울 웹관리자 화면의 '단말앱 현황' 화면에서 '단말앱 시스템푸시 설정'메뉴를 통해 시스템 푸시를 '허용'으로 설정하면 그때부터 래셔널아울은 해당 서비스의 전체 단말앱 삭제여부를 트래킹하고 동기화한다. 
 
-앱서버가 삭제한 단말앱을 동기화하는 방법은 두 가지이다.
+  시스템 푸시는 래셔널아울 서비스 차원에서 단말앱에 발신하는 사일런트 푸시이다. 시스템 푸시를 허용으로 설정하면 해당 서비스 내 모든 단말앱에 하루 2번 시스템을 발신하고 모든 단말앱들의 시스템 푸시 수신 여부를 트래킹한다. 참고로 시스템 푸시는 통계에 수치가 반영되지 않고 과금이 되지 않는다.
 
-- 래셔널아울 웹 관리자 콘솔에서 시스템 푸시 허용을 설정시 래셔널아울 서비스 차원에서 자동 동기화하는 방법
-- 래셔널아울 시스템 푸시를 이용하지 않고 앱서버가 주기적으로 모든 단말앱에 사일런트 커스텀푸시를 발신하여 삭제한 단말앱 아이디 목록을 파악 후 삭제한 단말앱을 단말앱등록해제 API를 통해 직접 해제하는 방법
+ 자동 동기화 방식에서 래셔널아울이 단말앱 삭제 판단 기준은 아래 두 가지 조건을 모두 만족하는 경우이다.
+ - 단말앱이 2주 이상 시스템푸시를 수신하지 않음
+ - 단말앱이 2주 이상 실행되지 않음
+ 
+단말앱 삭제 판단 기준일 2주는 구축형의 경우 고객사가 설정 가능하나 클라우드 형의 경우 설정을 지원하지 않는다.
+
+둘째, 개발사 직접 수행하는 수동 동기화 방식이다. 서비스 성격에 따라 단말앱 삭제 판단 기준일을 3일로 빠른 동기화가 필요할 수도 있고 한달 정도로 판단기준일을 길게 잡고자 할 경우에 적합하다. 
+
+수동 동기화 방식은 자동화 방식에서 래셔널아울이 시스템푸시를 통해 동기화하는 방식을 직접 개발사에서 진행하면 된다. 즉, 고객사 앱서버에서 매일 하루 한 번 이상 사일런트 커스텀푸시를 모든 단말앱에 발신하여 메시지 트래킹 API 혹은 자동 메시지 트래킹 모드의 콜백을 통해 모든 단말앱의 알림전달 여부를 확인하여 삭제 판단 기준일 초과 단말앱아이디를 삭제 처리하면 된다. 직접 동기화 방식에서 주의할 점은 시스템푸시를 불허로 한 경우 래셔널아울은 삭제된 단말앱에 대한 동기화를 진행하지 않기 때문에 고객사 앱서버에서 unregisterDeviceIds API를 통해 사용자 삭제 단말앱 아이디 목록을 래셔널아울에 알려줘야 한다는 것이다. 
+
+ 경우에 따라 자동/수동 동기화 방식을 같이 사용할 수 도 있다.
+
+## 단말앱 동기화 리스너 등록
+단말앱 동기화 API 결과를 처리할 리스너를 등록하면 이후 등록해제된 단말앱 아이디 목록을 콜백을 통해 알 수 있다. 
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+serverMgr.setDeviceSyncListener(new SimpleDeviceSyncListener());
+```
+
+
+## 유효한 단말앱 아이디 목록 조회 
+ 시스템푸시를 허용으로 단말앱 자동 동기화 방식을 이용하는 경우 래셔널아울은 삭제된 단말앱까지 동기화하게 된다. 앱서버는 주기적으로 getDeviceIds API를 호출하면 서비스 내 모든 유효한 단말앱 목록을 동기화해야 한다. 한번의 API호출로 최대 20,000개 단말앱 아이디를 조회할 수 있다. 따라서 100만개 단말앱이 있는 서비스의 경우 해당 API를 50회 호출해야 한다.
+   
+### 유효한 단말앱 아이디 목록 조회 API
+ 
+```java
+/**
+* 서비스 내 유효한 단말앱 아이디 목록을 요청한다. 
+* 결과는 setDeviceSyncListener로 등록한 DeviceSyncListener의 onDeviceIdResult 콜백을 통해  확인한다.
+*     
+* @param startIndex
+*            전체 단말앱 중 fetch 시작 index
+* @param fetchSize
+*            전체 단말앱 목록 startIndex부터 fetch할 단말앱 아이디 목록 수.
+*            최대 20,000
+* @return request id
+*/
+public String getDeviceIds(int startIndex, int fetchSize) {
+}
+```
+
+### API 사용 예
+
+```java
+AppServerManager serverMgr = AppServerManager.getInstance();
+serverMgr.getDeviceIds(0, 20000);
+```
+
+
+### 유효한 단말앱 아이디 목록 조회 결과 콜백
+onDeviceIdResult 콜백에서 결과를 알 수 있다.
+
+```java
+/**
+* AppServerManager의 getDeviceIds()API 호출결과 콜백이다.
+* 
+* @param resultCode
+*            Result클래스에 정의된 결과값 상수
+* @param resultMsg
+*            resultCode의 값에 대한 의미    
+* @param totalDeviceSize
+*            서비스 내 유효한 단말앱 총 수
+* @param startIndex
+*            유효한 전체 단말앱 아이디 목록 중 fetch해올 목록의 첫 인덱스
+* @param fetchDeviceSize
+*            totalDeviceSize 중 startIndex부터 fetchDeviceSize 만큼의 단말앱 아이디를 deviceIds에 fetch 해 온다.
+* @param deviceIds
+*            fetch 해 온 단말앱 아이디 목록            
+*                      
+* @param requestId
+*            본 콜백 결과를 야기한 getDeviceIds() API 반환값
+*/
+public void onDeviceIdResult(int resultCode, String resultMsg, int totalDeviceSize, int startIndex, int fetchDeviceSize, ArrayList<String> deviceIds, String requestId) {
+
+}
+```
+
+## 단말그룹 내 단말앱 아이디 목록 조회 
+ 자동 동기화 방식을 이용하는 경우 앱서버는 주기적으로 getDeviceIds API를 호출하여 단말그룹 내 모든 유효한 단말앱 목록을 동기화해야 한다. 한번의 API호출로 최대 20,000개 단말앱 아이디를 조회할 수 있다. 따라서 100만개 단말앱이 있는 단말그룹의 경우 해당 API를 50회 호출해야 한다.
+   
+### 단말그룹 내 단말앱 아이디 목록 조회 API
+ 
+```java
+/**
+* 본 API가 호출되면 단말 그룹 내 동기화 작업이 수행되고 단말그룹내 내 유효한 단말앱 아이디 목록이 콜백으로 전달된다. 
+* 결과는 setDeviceSyncListener로 등록한 DeviceSyncListener의 onGroupDeviceIdResult 콜백을 통해  확인한다.
+* 
+* @param deviceGroupId
+*            대상 단말그룹 아이디 
+* @param startIndex
+*            전체 단말앱 중 fetch 시작 index
+* @param fetchSize
+*            전체 단말앱 목록 startIndex부터 fetch할 단말앱 아이디 목록 수
+*            최대 20,000            
+* @return request id
+*/
+public String getSynchronizedGroupDeviceIds(String deviceGroupId, int startIndex, int fetchSize) {
+}
+```
+
+
+### 단말그룹 내 단말앱 아이디 목록 조회 결과 콜백
+onDeviceIdResult 콜백에서 결과를 알 수 있다.
+
+```java
+/**
+* AppServerManager의 getDeviceIdsInDeviceGroup()API 호출결과 콜백이다.
+* 
+* @param resultCode
+*            Result클래스에 정의된 결과값 상수
+* @param resultMsg
+*            resultCode의 값에 대한 의미    
+* @param deviceGroupId
+*            대상 단말 그룹 아이디       
+* @param totalDeviceSize
+*            단말그룹 내 유효한 단말앱 총 수
+* @param startIndex
+*            단말그룹의 전체 단말앱 아이디 목록 중 fetch해올  첫 번째 인덱스
+* @param fetchDeviceSize
+*            totalDeviceSize 중 startIndex부터 fetchDeviceSize 만큼의 단말앱 아이디를 deviceIds에 fetch 해 온다.
+* @param deviceIds
+*            fetch 해 온 단말앱 아이디 목록            
+*                      
+* @param requestId
+*            본 콜백 결과를 야기한 getDeviceIdsInDeviceGroup() API 반환값
+*/
+public void onGroupDeviceIdResult(int resultCode, String resultMsg, String deviceGroupId, int totalDeviceSize, int startIndex, int fetchDeviceSize, ArrayList<String> deviceIds, String requestId) {
+}
+```
+
+
+
 
 
 ## 단말앱 등록 해제 
-앱서버가 주기적으로 사일런트 커스텀푸시를 발신 후 단말앱 삭제 판단 기준일 이상 단말앱에 푸시알림이 전달되지 않고 단말앱이 판단 기준일 이상 실행된 적이 없을 경우 앱서버는 unregisterDevices API를 호출하여 래셔널아울 서비스에서 등록해제하도록 알려야 한다.
+ 단말앱 수동 동기화 방식에서 삭제 판단일 초과 단말앱에 댛새 앱서버는 unregisterDevices API를 호출하여 래셔널아울 서비스에서도 동기화 하도록 알려야 한다.
 
   
 ### 단말앱 등록 해제 API
@@ -1115,16 +1246,9 @@ devices.add("app id 2");
 serverMgr.unregisterDevices(devices);
 ```
 
-### 단말앱 등록 해제 결과 리스너 등록
-단말앱 등록 해제 결과를 처리할 리스너를 등록하면 이후 등록해제된 단말앱 아이디 목록을 콜백을 통해 알 수 있다. 
-
-```java
-AppServerManager serverMgr = AppServerManager.getInstance();
-serverMgr.setDeviceSyncListener(new SimpleDeviceSyncListener());
-```
 
 ### 단말앱 등록 해제 결과 콜백
-단말앱 등록 해제 API 호출후 그 결과는 결과를 처리할 리스너를 등록하면 이후 등록해제된 단말앱 아이디 목록을 콜백을 통해 알 수 있다. 
+onDevicesUnregisterResult 콜백에서 결과를 알 수 있다.
 
 ```java
 class SimpleDeviceSyncListener implements DeviceSyncListener {
