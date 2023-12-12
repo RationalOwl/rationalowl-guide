@@ -193,32 +193,39 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 ![이미지 이름](./img/server_key_1.png)
 
-3. '클라우드 메시징' 탭을 누르면 서버키 값이 나타나는데 해당 값을 카피한다.
+3. '클라우드 메시징' 탭을 눌러 cloud Message API(기존)의 우상단 메뉴를 눌러 'Google Cloud Console에서 API관리'를 클릭한다. 
 
-![이미지 이름](./img/server_key_2.png)
+![이미지 이름](./img/server_key_21.png)
 
-4. 래셔널아울 콘솔에 로그인한다.
+4. '클라우드 메시징' 화면의 '사용' 버튼을 클릭한다.
+
+![이미지 이름](./img/server_key_22.png)
+5. '클라우드 메시징' 탭의 cloud Message API(기존)이 '사용 설정됨'으로 변한 것을 확인한다. 서버키를 카피한다.
+
+![이미지 이름](./img/server_key_23.png)
+
+6. 래셔널아울 콘솔에 로그인한다.
 
 ![이미지 이름](./img/server_key_3.png)
 
-5. '+서비스'버튼을 클릭하여 서비스 이름과 서비스 설명을 입력후 추가 버튼을 클릭한다.
+7. '+서비스'버튼을 클릭하여 서비스 이름과 서비스 설명을 입력후 추가 버튼을 클릭한다.
 
 ![이미지 이름](./img/server_key_4.png)
 
-6. 서비스 목록에 추가된 서비스의 '바로가기' 버튼을 클릭한다.
+8. 서비스 목록에 추가된 서비스의 '바로가기' 버튼을 클릭한다.
 
 ![이미지 이름](./img/server_key_5.png)
 
-7. 'FCM 서버키 등록' 버튼을 클릭한다.
+9. 'FCM 서버키 등록' 버튼을 클릭한다.
 
 ![이미지 이름](./img/server_key_6.png)
 
 
-8. 앞서 Firebase 콘솔에서 카피한 서버키를 입력 후 '업로드' 버튼을 클릭한다.
+10. 앞서 Firebase 콘솔에서 카피한 서버키를 입력 후 '업로드' 버튼을 클릭한다.
 
 ![이미지 이름](./img/server_key_7.png)
 
-9. FCM 서버키가 정상 등록된 것을 확인한다.
+11. FCM 서버키가 정상 등록된 것을 확인한다.
 
 ![이미지 이름](./img/server_key_8.png)
 
