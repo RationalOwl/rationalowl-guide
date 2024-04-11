@@ -193,40 +193,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 ![이미지 이름](./img/server_key_1.png)
 
-3. '클라우드 메시징' 탭을 눌러 cloud Message API(기존)의 우상단 메뉴를 눌러 'Google Cloud Console에서 API관리'를 클릭한다. 
+3. '일반' 탭을 눌러 프로젝트 ID를 확인한다.
 
-![이미지 이름](./img/server_key_21.png)
+![이미지 이름](./img/json-1.png)
 
-4. '클라우드 메시징' 화면의 '사용' 버튼을 클릭한다.
+4. '클라우드 메시징' 탭에서 '서비스 계정 관리'를 클릭한다.
 
-![이미지 이름](./img/server_key_22.png)
-5. '클라우드 메시징' 탭의 cloud Message API(기존)이 '사용 설정됨'으로 변한 것을 확인한다. 서버키를 카피한다.
+![이미지 이름](./img/json-2.png)
 
-![이미지 이름](./img/server_key_23.png)
+5. '키관리' 버튼을 클릭한다.
 
-6. 래셔널아울 콘솔에 로그인한다.
+![이미지 이름](./img/json-3.png)
+6. 키 추가 > '새 키 만들기' 클릭한다.
 
-![이미지 이름](./img/server_key_3.png)
+![이미지 이름](./img/json-4.png)
+7. 키 유형을 json 으로 선택 후 '만들기' 클릭하면 json 형식의 파일이 다운로드된다.
+ 해당 파일을 잘 관리해야 한다.
 
-7. '+서비스'버튼을 클릭하여 서비스 이름과 서비스 설명을 입력후 추가 버튼을 클릭한다.
+![이미지 이름](./img/json-5.png)
 
-![이미지 이름](./img/server_key_4.png)
+8. 래셔널아울 웹 관리자 콘솔에 접속후 overview > 'FCM 인증파일 등록' 버튼을 클릭 후
+앞서 확인한 프로젝트 ID와 json 형식의 키 파일을 업로드한다.
+![이미지 이름](./img/json-6.png)
 
-8. 서비스 목록에 추가된 서비스의 '바로가기' 버튼을 클릭한다.
-
-![이미지 이름](./img/server_key_5.png)
-
-9. 'FCM 서버키 등록' 버튼을 클릭한다.
-
-![이미지 이름](./img/server_key_6.png)
-
-
-10. 앞서 Firebase 콘솔에서 카피한 서버키를 입력 후 '업로드' 버튼을 클릭한다.
-
-![이미지 이름](./img/server_key_7.png)
-
-11. FCM 서버키가 정상 등록된 것을 확인한다.
-
-![이미지 이름](./img/server_key_8.png)
-
-이로서 안드로이드 단말앱이 백그라운드일 경우 앱서버로부터의 다운스르트림 메시지나 다른 단말앱으로부터의 P2P 메시지를 수신시 FCM 을 통한 알림 메시지를 수신할 수 있다.
+이로서 안드로이드 단말앱에 푸시 알림을 발신할 수 있다.
